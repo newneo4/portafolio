@@ -18,13 +18,13 @@ export function createProps(scene, manager) {
   const desk = buildDesk(group, darkWood);
 
   // ── Laptop (on desk) ─────────────────────────────────────────────────────────
-  const { screenMesh, laptopClickable } = buildLaptop(desk, manager);
+  const { screenMesh, laptopClickable, laptopGroup } = buildLaptop(desk, manager);
 
   // ── Coffee Mug (right side of desk) ──────────────────────────────────────────
   const mugGroup = buildMug(desk);
 
   // ── Trash Can (next to desk on the floor) ────────────────────────────────────
-  buildTrashCan(group);
+  buildTrashCan(group, manager);
 
   // ── Bookshelf (left wall) ─────────────────────────────────────────────────────
   buildBookshelf(group);
@@ -41,7 +41,7 @@ export function createProps(scene, manager) {
   // ── Posters (Back wall) ──────────────────────────────────────────────────
   buildPosters(group, manager);
 
-  return { screenMesh, laptopClickable, mugGroup, chairGroup };
+  return { screenMesh, laptopClickable, laptopGroup, mugGroup, chairGroup };
 }
 
 export function interactChair(chairGroup) {
@@ -114,104 +114,83 @@ function buildDesk(parent, mat) {
 // ─────────────────────────────────────────────────────────────────────────────
 function buildLaptop(deskGroup, manager) {
   const laptopClickable = [];
+  const laptopGroup = new THREE.Group();
+  laptopGroup.position.set(-0.1, 0.98, 0.1);
+  deskGroup.add(laptopGroup);
 
   const gltfLoader = new GLTFLoader(manager);
   gltfLoader.load('/models/laptop.glb', (gltf) => {
     const laptopModel = gltf.scene;
-    
+
     // Scale and position adjustment to sit on the desk
-    // Aumentamos un poquito más la escala
-    laptopModel.scale.set(0.95, 0.95, 0.95); 
-    // Ajustamos la altura proporcionalmente al nuevo escritorio más alto
-    laptopModel.position.set(-0.1, 0.98, 0.1);
-    // Rotate to face the chair
-    laptopModel.rotation.y = 0; 
-    
-    const ubuntuTex = makeScreenTexture();
-    
+    laptopModel.scale.set(0.95, 0.95, 0.95);
+    // Position and rotation are handled by laptopGroup now
+    laptopModel.position.set(0, 0, 0);
+    laptopModel.rotation.y = 0;
+
+    const texLoader = new THREE.TextureLoader(manager);
+    const ubuntuTex = texLoader.load('/textures/background/fondo.jpeg');
+    ubuntuTex.flipY = true; // Restaurar flipY para geometries estándar (PlaneGeometry)
+    ubuntuTex.colorSpace = THREE.SRGBColorSpace;
+
     laptopModel.traverse((node) => {
       if (node.isMesh) {
         node.castShadow = true;
         node.receiveShadow = true;
-        
+
         if (node.material && node.material.name === 'Display and Camera') {
-           // We found the screen mesh material! Apply our Ubuntu texture
-           node.material = new THREE.MeshStandardMaterial({
-             map: ubuntuTex,
-             emissive: new THREE.Color(0xffffff),
-             emissiveMap: ubuntuTex,
-             emissiveIntensity: 0.8,
-             roughness: 0.1,
-             metalness: 0.1
-           });
+          // Restaurar el material original de la pantalla a un negro/gris muy oscuro para el marco
+          node.material = new THREE.MeshStandardMaterial({
+            color: 0x050505,
+            roughness: 0.6,
+            metalness: 0.8
+          });
         } else {
-           // Ensure standard materials for good lighting on other parts
-           if (node.material && (node.material.isMeshStandardMaterial || node.material.isMeshPhysicalMaterial)) {
-              node.material.roughness = Math.max(node.material.roughness, 0.3);
-           } else if (node.material) {
-              const oldMat = node.material;
-              node.material = new THREE.MeshStandardMaterial({
-                color: oldMat.color || 0xffffff,
-                roughness: 0.5,
-                metalness: 0.5
-              });
-              if (oldMat.map) node.material.map = oldMat.map;
-           }
+          // Ensure standard materials for good lighting on other parts
+          if (node.material && (node.material.isMeshStandardMaterial || node.material.isMeshPhysicalMaterial)) {
+            node.material.roughness = Math.max(node.material.roughness, 0.3);
+          } else if (node.material) {
+            const oldMat = node.material;
+            node.material = new THREE.MeshStandardMaterial({
+              color: oldMat.color || 0xffffff,
+              roughness: 0.5,
+              metalness: 0.5
+            });
+            if (oldMat.map) node.material.map = oldMat.map;
+          }
         }
 
         laptopClickable.push(node);
       }
     });
 
-    deskGroup.add(laptopModel);
+    // Crear un plano separado para la pantalla, evitando los problemas de UV del modelo
+    const screenOverlay = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.0, 0.68),
+      new THREE.MeshStandardMaterial({
+        map: ubuntuTex,
+        emissive: new THREE.Color(0xffffff),
+        emissiveMap: ubuntuTex,
+        emissiveIntensity: 0.8,
+        roughness: 0.1,
+        metalness: 0.1
+      })
+    );
+    // Posición y rotación calculadas basadas en los bounds del mesh original
+    screenOverlay.position.set(-0.01, 0.42, -0.392);
+    screenOverlay.rotation.x = -0.03; // Ligera inclinación hacia atrás
+    laptopModel.add(screenOverlay);
+    laptopClickable.push(screenOverlay);
+
+    laptopGroup.add(laptopModel);
   });
 
-  return { screenMesh: null, laptopClickable };
+  return { screenMesh: null, laptopClickable, laptopGroup };
 }
 
-/** Creates the "desktop" canvas texture shown on the laptop screen in 3D */
-function makeScreenTexture() {
-  const W = 512, H = 340;
-  const canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
 
-  // Background
-  const bg = ctx.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#07111e');
-  bg.addColorStop(1, '#030810');
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, W, H);
 
-  // Subtle grid
-  ctx.strokeStyle = 'rgba(0, 80, 180, 0.08)';
-  ctx.lineWidth = 1;
-  for (let x = 0; x < W; x += 28) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H - 30); ctx.stroke(); }
-  for (let y = 0; y < H - 30; y += 28) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-  // Taskbar
-  ctx.fillStyle = 'rgba(10,12,20,0.95)';
-  ctx.fillRect(0, H - 30, W, 30);
-
-  // Prompt text
-  ctx.font = '500 18px "Courier New", monospace';
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(96, 160, 255, 0.5)';
-  ctx.fillText('▷  Click to explore', W / 2, H / 2 - 5);
-
-  // Terminal cursor blink (static)
-  ctx.fillStyle = 'rgba(96, 200, 255, 0.7)';
-  ctx.fillRect(W / 2 - 6, H / 2 + 12, 12, 2);
-
-  // Taskbar clock
-  ctx.font = '11px monospace';
-  ctx.textAlign = 'right';
-  ctx.fillStyle = 'rgba(180, 200, 255, 0.5)';
-  const now = new Date();
-  ctx.fillText(`${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`, W - 12, H - 10);
-
-  return new THREE.CanvasTexture(canvas);
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Coffee Mug
@@ -280,43 +259,34 @@ function addSteam(parent) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Trash Can
 // ─────────────────────────────────────────────────────────────────────────────
-function buildTrashCan(parent) {
-  // Larger metallic trash bin — matte dark plastic, no metalness to avoid highlights
-  const trashMat = new THREE.MeshStandardMaterial({ color: 0x1e1e1e, roughness: 0.92, metalness: 0.05 });
-  const rimMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, metalness: 0.08, roughness: 0.9 });
+function buildTrashCan(parent, manager) {
+  const gltfLoader = new GLTFLoader(manager);
+  gltfLoader.load('/models/garbage_can.glb', (gltf) => {
+    const trashModel = gltf.scene;
 
-  const CX = 1.1, CZ = -7.3; // position
+    // La altura natural del modelo es ~0.41m, escala 1.1 la deja en ~0.45m
+    trashModel.scale.set(1.1, 1.1, 1.1);
 
-  // Can body — taller and wider
-  const can = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.16, 0.45, 22, 1, true), trashMat);
-  can.position.set(CX, 0.225, CZ);
-  can.castShadow = true;
-  parent.add(can);
+    const CX = 1.1, CZ = -7.3;
+    trashModel.position.set(CX, 0, CZ);
 
-  // Bottom disc
-  const bottom = new THREE.Mesh(new THREE.CircleGeometry(0.16, 22), trashMat);
-  bottom.rotation.x = -Math.PI / 2;
-  bottom.position.set(CX, 0.002, CZ);
-  parent.add(bottom);
+    trashModel.traverse((node) => {
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
 
-  // Top rim
-  const rim = new THREE.Mesh(new THREE.TorusGeometry(0.20, 0.012, 8, 24), rimMat);
-  rim.rotation.x = Math.PI / 2;
-  rim.position.set(CX, 0.45, CZ);
-  parent.add(rim);
+        if (node.material) {
+          node.material.roughness = 0.8;
+          node.material.metalness = 0.2;
+        }
+      }
+    });
 
-  // Crumpled paper sticking out
-  addCrumpledPaper(parent, CX, 0.50, CZ);
+    parent.add(trashModel);
+  });
 }
 
-function addCrumpledPaper(parent, x, y, z) {
-  const paperMat = new THREE.MeshStandardMaterial({ color: 0xd8d4c8, roughness: 0.95, metalness: 0 });
-  const paper = new THREE.Mesh(new THREE.SphereGeometry(0.06, 6, 5), paperMat);
-  paper.position.set(x, y, z);
-  paper.scale.set(1.2, 0.7, 1.1);
-  paper.rotation.set(0.3, 0.8, 0.2);
-  parent.add(paper);
-}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Bookshelf (left wall)
@@ -541,21 +511,21 @@ function buildBed(parent, manager) {
   gltfLoader.load('/models/bed_model_002.glb', (gltf) => {
     const bedModel = gltf.scene;
     // Scale and position adjustment
-    bedModel.scale.set(1.2, 1.2, 1.2); 
+    bedModel.scale.set(1.2, 1.2, 1.2);
     bedModel.position.set(0, 0, 0);
-    
+
     // Enable shadows on all meshes within the model
     bedModel.traverse((node) => {
       if (node.isMesh) {
         node.castShadow = true;
         node.receiveShadow = true;
-        
+
         // Upgrade material if needed for better lighting
         if (node.material) {
           const oldMat = node.material;
           // Si el modelo ya trae un StandardMaterial, lo conservamos pero le ajustamos el roughness
           if (oldMat.isMeshStandardMaterial || oldMat.isMeshPhysicalMaterial) {
-             oldMat.roughness = Math.max(oldMat.roughness, 0.7);
+            oldMat.roughness = Math.max(oldMat.roughness, 0.7);
           } else {
             node.material = new THREE.MeshStandardMaterial({
               color: oldMat.color || 0xffffff,

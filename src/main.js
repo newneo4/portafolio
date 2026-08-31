@@ -2,8 +2,6 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { createDoorScene, openDoor } from './scene/door.js';
 import { createRoom } from './scene/room.js';
 import { createProps, interactChair, interactMug } from './scene/props.js';
 
@@ -73,8 +71,8 @@ manager.onLoad = () => {
 
 // ─── SCENE GEOMETRY ──────────────────────────────────────────────────────────
 const roomObj = createRoom(scene);
-const { screenMesh, laptopClickable, mugGroup, chairGroup } = createProps(scene, manager);
-const interactableObjects = [...laptopClickable, chairGroup, mugGroup];
+const { screenMesh, laptopClickable, laptopGroup, mugGroup, chairGroup } = createProps(scene, manager);
+const interactableObjects = [laptopGroup, chairGroup, mugGroup];
 
 // ─── STATE MACHINE ───────────────────────────────────────────────────────────
 let state = 'ROOM'; // ROOM | ZOOMING | PORTFOLIO
@@ -117,7 +115,7 @@ renderer.domElement.addEventListener('click', (e) => {
     const hits = raycaster.intersectObjects(interactableObjects, true);
     if (hits.length > 0) {
       const obj = hits[0].object;
-      
+
       // Check if it's the laptop
       if (laptopClickable.includes(obj)) {
         zoomToLaptop();
