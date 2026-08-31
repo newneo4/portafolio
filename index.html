@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portafolio — Dev Experience</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #050505;
+    }
+
+    #container {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* ── Loader ── */
+
+    /* ── CSS Post-Processing (Vignette & Grain) ── */
+    .post-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      /* Vignette */
+      background: radial-gradient(circle, rgba(0, 0, 0, 0) 40%, rgba(10, 5, 5, 0.7) 120%);
+    }
+
+    .post-overlay::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      /* Simple noise texture inline */
+      background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      mix-blend-mode: multiply;
+    }
+
+    #loader {
+      position: absolute;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #050505;
+      color: #08264a;
+      font-family: 'Courier New', monospace;
+      transition: opacity 0.8s;
+    }
+
+    #loader p {
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Terminal blinking cursor */
+    #loader p::after {
+      content: '█';
+      margin-left: 8px;
+      color: #08264a;
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* ── Click hint ── */
+    #hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.55);
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transition: opacity 0.6s;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    #hint.visible {
+      opacity: 1;
+    }
+
+    /* ── Crosshair (in ROOM state) ── */
+    #crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    #crosshair::before,
+    #crosshair::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    #crosshair::before {
+      width: 2px;
+      height: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #crosshair::after {
+      width: 100%;
+      height: 2px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #crosshair.visible {
+      opacity: 1;
+    }
+
+    /* ── Portfolio full-screen overlay ── */
+    #portfolio-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      flex-direction: column;
+      background: #0d0d0d;
+    }
+
+    #portfolio-overlay.active {
+      display: flex;
+    }
+
+    #portfolio-overlay iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+
+    /* ── Exit button ── */
+    #exit-btn {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 110;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(10, 10, 20, 0.7);
+      color: #60a0f0;
+      border: 1px solid rgba(96, 160, 240, 0.3);
+      padding: 0.6rem 1.2rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    #exit-btn:hover {
+      background: rgba(96, 160, 240, 0.15);
+      color: #90c0ff;
+    }
+
+    #exit-btn.visible {
+      display: flex;
+    }
+
+    /* ── Transition screen ── */
+    #transition-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 150;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+
+    #transition-screen.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #transition-screen span {
+      color: rgba(255, 255, 255, 0.55);
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      animation: pulse-text 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-text {
+      from {
+        opacity: 0.4;
+      }
+
+      to {
+        opacity: 0.9;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loader">
+    <p>Loading_</p>
+  </div>
+
+  <div id="hint"></div>
+  <div id="crosshair"></div>
+  <div id="container"></div>
+  <div class="post-overlay"></div>
+
+  <div id="transition-screen"><span>Entrando...</span></div>
+
+  <div id="portfolio-overlay">
+    <iframe src="/portfolio.html" id="portfolio-frame" title="Portfolio"></iframe>
+  </div>
+  <button id="exit-btn">← Volver al cuarto</button>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

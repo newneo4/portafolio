@@ -1,0 +1,225 @@
+/* Ubuntu Desktop Simulation */
+:root {
+  --ubuntu-topbar: rgba(0, 0, 0, 0.85);
+  --ubuntu-dock: rgba(0, 0, 0, 0.6);
+  --ubuntu-orange: #e95420;
+  --window-bg: #1e1e1e;
+  --window-header: #2b2b2b;
+  --text-main: #f2f2f2;
+  --text-muted: #888;
+}
+
+/* Custom Cursor - Ubuntu Yaru style */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-main);
+  background: radial-gradient(circle at bottom right, #e95420, #77216f 40%, #2c001e 80%);
+  background-size: cover;
+  user-select: none;
+  cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 3 L6 20 L10 16 L14 23 L17 21 L13 14 L19 14 Z" fill="black" stroke="white" stroke-width="1.5"/></svg>') 6 3, default;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 27px;
+  background: var(--ubuntu-topbar);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.topbar-left, .topbar-right, .topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar-item {
+  cursor: pointer;
+  padding: 0 5px;
+  border-radius: 4px;
+}
+.topbar-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* ── DOCK (Left Panel) ── */
+.dock {
+  position: absolute;
+  top: 27px;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  background: var(--ubuntu-dock);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  gap: 15px;
+  z-index: 9998;
+}
+
+.dock-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.dock-icon:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.dock-icon.active::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ubuntu-orange);
+}
+
+/* ── WINDOWS ── */
+.os-window {
+  position: absolute;
+  width: 700px;
+  height: 500px;
+  background: var(--window-bg);
+  border-radius: 8px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Centered initially, but inline styles will override after drag */
+  top: calc(50% - 250px);
+  left: calc(50% - 350px + 30px); /* offset dock */
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.os-window.open {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+
+.window-header {
+  height: 40px;
+  background: var(--window-header);
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Title in center */
+  position: relative;
+  cursor: grab;
+  user-select: none;
+}
+
+.window-header:active {
+  cursor: grabbing;
+}
+
+.window-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.window-controls {
+  position: absolute;
+  right: 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.control-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: #444;
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.control-btn.close:hover {
+  background: #e95420;
+}
+.control-btn.minimize:hover {
+  background: #777;
+}
+.control-btn.maximize:hover {
+  background: #777;
+}
+
+.window-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  user-select: text;
+}
+.window-content::-webkit-scrollbar { width: 8px; }
+.window-content::-webkit-scrollbar-track { background: var(--window-bg); }
+.window-content::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+/* ── CONTENT STYLES ── */
+h1 { font-size: 2.5rem; margin-top: 0; color: #fff; }
+h1 span { color: var(--ubuntu-orange); }
+h2 { color: #aaa; font-weight: 400; }
+p { line-height: 1.6; color: #ccc; }
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+.card h3 { margin-top: 0; color: var(--ubuntu-orange); }
+
+.skills-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.skill-tag {
+  background: #333;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+a { color: var(--ubuntu-orange); text-decoration: none; }
+a:hover { text-decoration: underline; }
