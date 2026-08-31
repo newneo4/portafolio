@@ -105,8 +105,8 @@ body {
 /* ── WINDOWS ── */
 .os-window {
   position: absolute;
-  width: 700px;
-  height: 500px;
+  width: 900px;
+  height: 600px;
   background: var(--window-bg);
   border-radius: 8px;
   box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
@@ -114,12 +114,21 @@ body {
   flex-direction: column;
   overflow: hidden;
   /* Centered initially, but inline styles will override after drag */
-  top: calc(50% - 250px);
-  left: calc(50% - 350px + 30px); /* offset dock */
+  top: calc(50% - 300px);
+  left: calc(50% - 450px + 30px); /* offset dock */
   opacity: 0;
   transform: scale(0.95);
   pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s, width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+}
+
+.os-window.maximized {
+  width: calc(100vw - 65px) !important;
+  height: calc(100vh - 27px) !important;
+  top: 27px !important;
+  left: 65px !important;
+  border-radius: 0;
+  transform: none !important;
 }
 
 .os-window.open {
@@ -197,17 +206,76 @@ p { line-height: 1.6; color: #ccc; }
 
 .grid-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
 
 .card {
-  background: #2a2a2a;
-  padding: 1.5rem;
-  border-radius: 6px;
+  background: var(--window-header);
   border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
-.card h3 { margin-top: 0; color: var(--ubuntu-orange); }
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  border-color: var(--ubuntu-orange);
+}
+
+.card-image {
+  width: 100%;
+  height: 140px;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid #333;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.card-content {
+  padding: 15px;
+}
+
+.card h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  color: var(--ubuntu-orange);
+}
+
+.card p {
+  margin: 0 0 10px 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.card-tag {
+  background: #333;
+  color: #ccc;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
 
 .skills-section {
   display: flex;

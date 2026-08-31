@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interfaz de escritorio Ubuntu - Portafolio interactivo">
   <title>Ubuntu Desktop Simulator</title>
   <link rel="stylesheet" href="portfolio.css">
   <!-- Adding a font for Ubuntu style -->
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
   <!-- Top Bar -->
@@ -41,15 +45,18 @@
     <div class="window-header" onmousedown="startDrag(event, 'win-about')">
       <div class="window-title">Sobre Mí</div>
       <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('about')">_</button>
-        <button class="control-btn maximize">□</button>
-        <button class="control-btn close" onclick="closeWindow('about')">X</button>
+        <button class="control-btn minimize" onclick="closeWindow('about')" aria-label="Minimizar">_</button>
+        <button class="control-btn maximize" aria-label="Maximizar">□</button>
+        <button class="control-btn close" onclick="closeWindow('about')" aria-label="Cerrar">X</button>
       </div>
     </div>
     <div class="window-content" onmousedown="focusWindow('win-about')">
-      <h1>Hola, soy <span>[Tu Nombre]</span></h1>
-      <h2>Full-Stack Developer</h2>
-      <p>Construyo experiencias digitales escalables, limpias y eficientes. Me apasiona el diseño moderno y la lógica compleja de backend.</p>
+      <h2>Hola, soy Noé Ulises Machaca Chambilla</h2>
+      <p>Egresado de Ingeniería Estadística e Informática de la UNA Puno, con más de dos años de experiencia
+        construyendo sistemas transaccionales, plataformas SaaS y aplicaciones móviles en producción.</p>
+      <p>Tengo dominio en el ciclo completo del software: modelado de datos, arquitectura de APIs, interfaces
+        interactivas y despliegue en contenedores. Además, soy investigador registrado en RENACYT (CONCYTEC) y coautor
+        de diez obras de software con registro de propiedad intelectual.</p>
       <button class="card" style="cursor:pointer;" onclick="openWindow('projects')">Ver mi trabajo</button>
     </div>
   </div>
@@ -59,25 +66,100 @@
     <div class="window-header" onmousedown="startDrag(event, 'win-projects')">
       <div class="window-title">Proyectos</div>
       <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('projects')">_</button>
-        <button class="control-btn maximize">□</button>
-        <button class="control-btn close" onclick="closeWindow('projects')">X</button>
+        <button class="control-btn minimize" onclick="closeWindow('projects')" aria-label="Minimizar">_</button>
+        <button class="control-btn maximize" aria-label="Maximizar">□</button>
+        <button class="control-btn close" onclick="closeWindow('projects')" aria-label="Cerrar">X</button>
       </div>
     </div>
     <div class="window-content" onmousedown="focusWindow('win-projects')">
       <div class="grid-layout">
+
+        <!-- Proyecto 1 -->
         <div class="card">
-          <h3>E-Commerce Platform</h3>
-          <p>Next.js + Stripe + Tailwind</p>
+          <div class="card-image">
+            <img src="/textures/background/fondo.jpeg" alt="CRM Grupo Siena" />
+          </div>
+          <div class="card-content">
+            <h3>CRM GRUPO SIENA</h3>
+            <p>CRM integrado con la API oficial de WhatsApp Business y agente de IA para respuestas automáticas.
+              Sincronización automática de citas con Google Workspace.</p>
+            <div class="card-tags">
+              <span class="card-tag">React</span>
+              <span class="card-tag">NestJS</span>
+              <span class="card-tag">TypeScript</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Proyecto 2 -->
         <div class="card">
-          <h3>Task Manager Pro</h3>
-          <p>Node.js + MongoDB</p>
+          <div class="card-image">
+            <img src="/textures/background/fondo.jpeg" alt="Sistema UNA Puno" />
+          </div>
+          <div class="card-content">
+            <h3>Plataforma de Investigación</h3>
+            <p>SaaS para la gestión de semilleros y grupos de investigación (UNA Puno) para 300 usuarios. Autenticación,
+              RBAC y motor de reportes en PDF y Excel.</p>
+            <div class="card-tags">
+              <span class="card-tag">Next.js</span>
+              <span class="card-tag">Supabase</span>
+              <span class="card-tag">Django</span>
+              <span class="card-tag">Docker</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Proyecto 3 -->
         <div class="card">
-          <h3>AI Image Generator</h3>
-          <p>Python + OpenAI API</p>
+          <div class="card-image">
+            <img src="/textures/background/fondo.jpeg" alt="RentalControl ERP" />
+          </div>
+          <div class="card-content">
+            <h3>RentalControl ERP</h3>
+            <p>ERP en producción para el arriendo de maquinaria. Módulos de facturación, despachos, devoluciones y
+              conciliación financiera con firmas digitales.</p>
+            <div class="card-tags">
+              <span class="card-tag">Ruby on Rails</span>
+              <span class="card-tag">PostgreSQL</span>
+              <span class="card-tag">Hotwire</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Proyecto 4 -->
+        <div class="card">
+          <div class="card-image">
+            <img src="/textures/background/fondo.jpeg" alt="Pandoo CL" />
+          </div>
+          <div class="card-content">
+            <h3>Pandoo CL</h3>
+            <p>Form Builder dinámico drag-and-drop con generación de PDFs en AWS S3. Soporte para firmas digitales y
+              gestión granular de permisos (RBAC).</p>
+            <div class="card-tags">
+              <span class="card-tag">React</span>
+              <span class="card-tag">Rails</span>
+              <span class="card-tag">AWS S3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proyecto 5 -->
+        <div class="card">
+          <div class="card-image">
+            <img src="/textures/background/fondo.jpeg" alt="Endogastro Puno" />
+          </div>
+          <div class="card-content">
+            <h3>Endogastro Puno</h3>
+            <p>Ecosistema de salud digital (Web + Móvil iOS/Android). Historia clínica, farmacia, y autogestión de citas
+              con pagos integrados vía Culqi.</p>
+            <div class="card-tags">
+              <span class="card-tag">React Native</span>
+              <span class="card-tag">Node.js</span>
+              <span class="card-tag">Firebase</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -87,20 +169,25 @@
     <div class="window-header" onmousedown="startDrag(event, 'win-skills')">
       <div class="window-title">Habilidades</div>
       <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('skills')">_</button>
-        <button class="control-btn maximize">□</button>
-        <button class="control-btn close" onclick="closeWindow('skills')">X</button>
+        <button class="control-btn minimize" onclick="closeWindow('skills')" aria-label="Minimizar">_</button>
+        <button class="control-btn maximize" aria-label="Maximizar">□</button>
+        <button class="control-btn close" onclick="closeWindow('skills')" aria-label="Cerrar">X</button>
       </div>
     </div>
     <div class="window-content" onmousedown="focusWindow('win-skills')">
       <div class="skills-section">
-        <div class="skill-tag">JavaScript / TypeScript</div>
-        <div class="skill-tag">Node.js / Express</div>
-        <div class="skill-tag">PostgreSQL / MongoDB</div>
-        <div class="skill-tag">Three.js / WebGL</div>
-        <div class="skill-tag">Docker / AWS</div>
-        <div class="skill-tag">Python</div>
+        <div class="skill-tag">Ruby on Rails</div>
+        <div class="skill-tag">Node.js / NestJS</div>
         <div class="skill-tag">React / Next.js</div>
+        <div class="skill-tag">React Native</div>
+        <div class="skill-tag">TypeScript / JavaScript</div>
+        <div class="skill-tag">Django / Python</div>
+        <div class="skill-tag">PostgreSQL / MySQL</div>
+        <div class="skill-tag">Supabase / Firebase</div>
+        <div class="skill-tag">Docker</div>
+        <div class="skill-tag">AWS S3</div>
+        <div class="skill-tag">Git</div>
+        <div class="skill-tag">Hotwire / Stimulus</div>
       </div>
     </div>
   </div>
@@ -110,9 +197,9 @@
     <div class="window-header" onmousedown="startDrag(event, 'win-hobbies')">
       <div class="window-title">Hobbies</div>
       <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('hobbies')">_</button>
-        <button class="control-btn maximize">□</button>
-        <button class="control-btn close" onclick="closeWindow('hobbies')">X</button>
+        <button class="control-btn minimize" onclick="closeWindow('hobbies')" aria-label="Minimizar">_</button>
+        <button class="control-btn maximize" aria-label="Maximizar">□</button>
+        <button class="control-btn close" onclick="closeWindow('hobbies')" aria-label="Cerrar">X</button>
       </div>
     </div>
     <div class="window-content" onmousedown="focusWindow('win-hobbies')">
@@ -141,26 +228,31 @@
     <div class="window-header" onmousedown="startDrag(event, 'win-contact')">
       <div class="window-title">Contacto</div>
       <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('contact')">_</button>
-        <button class="control-btn maximize">□</button>
-        <button class="control-btn close" onclick="closeWindow('contact')">X</button>
+        <button class="control-btn minimize" onclick="closeWindow('contact')" aria-label="Minimizar">_</button>
+        <button class="control-btn maximize" aria-label="Maximizar">□</button>
+        <button class="control-btn close" onclick="closeWindow('contact')" aria-label="Cerrar">X</button>
       </div>
     </div>
     <div class="window-content" onmousedown="focusWindow('win-contact')">
       <h2>Hablemos</h2>
-      <p>¿Tienes una idea genial? ¡Contáctame!</p>
-      <a href="mailto:hola@ejemplo.com" style="font-size: 1.5rem; font-weight:bold; display:block; margin-bottom:2rem;">hola@ejemplo.com</a>
+      <p>Si quieres colaborar en algún proyecto o necesitas más información, no dudes en contactarme.</p>
+
+      <a href="mailto:noe.u.machaca@gmail.com"
+        style="font-size: 1.5rem; font-weight:bold; display:block; margin-bottom:0.5rem; color: var(--ubuntu-orange);">noe.u.machaca@gmail.com</a>
+      <p style="font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-muted);">📞 +51 965 100 861</p>
+
       <div style="display: flex; gap: 1rem;">
-        <a href="#">GitHub</a>
-        <a href="#">LinkedIn</a>
-        <a href="#">Twitter</a>
+        <a href="https://github.com/newneo4" target="_blank"
+          style="color: white; text-decoration: underline;">GitHub</a>
+        <a href="https://linkedin.com/in/noe-u-machaca" target="_blank"
+          style="color: white; text-decoration: underline;">LinkedIn</a>
       </div>
     </div>
   </div>
 
   <script>
     let highestZIndex = 10;
-    
+
     // --- Clock logic ---
     function updateClock() {
       const now = new Date();
@@ -177,13 +269,13 @@
         win.classList.add('open');
         focusWindow('win-' + id);
       }
-      
+
       // Update dock indicator
       document.querySelectorAll('.dock-icon').forEach(el => el.classList.remove('active'));
       // Find the clicked dock icon (simplified approach: match by title)
       const icons = Array.from(document.querySelectorAll('.dock-icon'));
       const activeIcon = icons.find(icon => icon.getAttribute('onclick').includes(`'${id}'`));
-      if(activeIcon) activeIcon.classList.add('active');
+      if (activeIcon) activeIcon.classList.add('active');
     }
 
     function closeWindow(id) {
@@ -201,6 +293,17 @@
       }
     }
 
+    // --- Maximize Logic ---
+    document.querySelectorAll('.control-btn.maximize').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const win = e.target.closest('.os-window');
+        if (win) {
+          win.classList.toggle('maximized');
+          focusWindow(win.id);
+        }
+      });
+    });
+
     // --- Drag and Drop ---
     let isDragging = false;
     let dragTarget = null;
@@ -209,33 +312,33 @@
 
     function startDrag(e, winId) {
       if (e.target.classList.contains('control-btn')) return; // Ignore clicks on buttons
-      
+
       isDragging = true;
       dragTarget = document.getElementById(winId);
       focusWindow(winId);
-      
+
       startX = e.clientX;
       startY = e.clientY;
-      
+
       const rect = dragTarget.getBoundingClientRect();
       initialX = rect.left;
       initialY = rect.top;
-      
+
       document.addEventListener('mousemove', drag);
       document.addEventListener('mouseup', stopDrag);
     }
 
     function drag(e) {
       if (!isDragging || !dragTarget) return;
-      
+
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      
+
       dragTarget.style.left = (initialX + dx) + 'px';
       dragTarget.style.top = (initialY + dy) + 'px';
-      
+
       // Remove centering transform to prevent conflicts with absolute positioning
-      dragTarget.style.transform = 'none'; 
+      dragTarget.style.transform = 'none';
     }
 
     function stopDrag() {
@@ -244,7 +347,7 @@
       document.removeEventListener('mousemove', drag);
       document.removeEventListener('mouseup', stopDrag);
     }
-    
+
     // Open the about window by default initially
     setTimeout(() => {
       openWindow('about');
@@ -252,4 +355,5 @@
 
   </script>
 </body>
+
 </html>
