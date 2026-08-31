@@ -27,7 +27,9 @@ body {
 /* ── TOP BAR ── */
 .topbar {
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 27px;
   background: var(--ubuntu-topbar);
   display: flex;
@@ -37,10 +39,12 @@ body {
   font-size: 0.85rem;
   font-weight: 500;
   z-index: 9999;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.topbar-left, .topbar-right, .topbar-center {
+.topbar-left,
+.topbar-right,
+.topbar-center {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -51,8 +55,9 @@ body {
   padding: 0 5px;
   border-radius: 4px;
 }
+
 .topbar-item:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ── DOCK (Left Panel) ── */
@@ -75,7 +80,7 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,7 +91,7 @@ body {
 }
 
 .dock-icon:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
 }
 
@@ -109,13 +114,14 @@ body {
   height: 600px;
   background: var(--window-bg);
   border-radius: 8px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   /* Centered initially, but inline styles will override after drag */
   top: calc(50% - 300px);
-  left: calc(50% - 450px + 30px); /* offset dock */
+  left: calc(50% - 450px + 30px);
+  /* offset dock */
   opacity: 0;
   transform: scale(0.95);
   pointer-events: none;
@@ -142,7 +148,8 @@ body {
   background: var(--window-header);
   display: flex;
   align-items: center;
-  justify-content: center; /* Title in center */
+  justify-content: center;
+  /* Title in center */
   position: relative;
   cursor: grab;
   user-select: none;
@@ -181,9 +188,11 @@ body {
 .control-btn.close:hover {
   background: #e95420;
 }
+
 .control-btn.minimize:hover {
   background: #777;
 }
+
 .control-btn.maximize:hover {
   background: #777;
 }
@@ -194,15 +203,40 @@ body {
   overflow-y: auto;
   user-select: text;
 }
-.window-content::-webkit-scrollbar { width: 8px; }
-.window-content::-webkit-scrollbar-track { background: var(--window-bg); }
-.window-content::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+.window-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: var(--window-bg);
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
 
 /* ── CONTENT STYLES ── */
-h1 { font-size: 2.5rem; margin-top: 0; color: #fff; }
-h1 span { color: var(--ubuntu-orange); }
-h2 { color: #aaa; font-weight: 400; }
-p { line-height: 1.6; color: #ccc; }
+h1 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  color: #fff;
+}
+
+h1 span {
+  color: var(--ubuntu-orange);
+}
+
+h2 {
+  color: #aaa;
+  font-weight: 400;
+}
+
+p {
+  line-height: 1.6;
+  color: #ccc;
+}
 
 .grid-layout {
   display: grid;
@@ -221,7 +255,7 @@ p { line-height: 1.6; color: #ccc; }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   border-color: var(--ubuntu-orange);
 }
 
@@ -282,6 +316,7 @@ p { line-height: 1.6; color: #ccc; }
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .skill-tag {
   background: #333;
   padding: 8px 15px;
@@ -289,5 +324,40 @@ p { line-height: 1.6; color: #ccc; }
   font-size: 0.9rem;
 }
 
-a { color: var(--ubuntu-orange); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a {
+  color: var(--ubuntu-orange);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ── RESPONSIVE MOBILE LANDSCAPE ── */
+@media screen and (max-width: 950px),
+screen and (max-height: 650px) {
+  .os-window {
+    /* Forzar maximizado en pantallas pequeñas horizontales */
+    width: calc(100vw - 65px) !important;
+    height: calc(100vh - 27px) !important;
+    top: 27px !important;
+    left: 65px !important;
+    border-radius: 0;
+    transform: none !important;
+  }
+
+  .control-btn.maximize {
+    /* Ocultar el botón maximizar ya que ya está maximizado a la fuerza */
+    display: none;
+  }
+
+  .window-header {
+    /* Bloquear el arrastre en móviles */
+    pointer-events: none;
+  }
+
+  .window-controls {
+    pointer-events: all;
+    /* Asegurar que los botones sigan siendo clicables */
+  }
+}
