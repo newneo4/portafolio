@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portafolio interactivo 3D de Noé Ulises Machaca Chambilla - Desarrollador Full-Stack e Ingeniero de Software." />
+  <meta name="description"
+    content="Portafolio interactivo 3D de Noé Ulises Machaca Chambilla - Desarrollador Full-Stack e Ingeniero de Software." />
   <meta name="theme-color" content="#050505" />
   <title>Portafolio — Dev Experience</title>
   <style>
@@ -80,7 +81,9 @@
     }
 
     @keyframes blink {
-      50% { opacity: 0; }
+      50% {
+        opacity: 0;
+      }
     }
 
     /* ── Click hint ── */
@@ -267,10 +270,21 @@
     }
 
     @keyframes rotate-phone {
-      0% { transform: rotate(0deg); }
-      40% { transform: rotate(-90deg); }
-      60% { transform: rotate(-90deg); }
-      100% { transform: rotate(0deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      40% {
+        transform: rotate(-90deg);
+      }
+
+      60% {
+        transform: rotate(-90deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
     }
 
     @media screen and (max-width: 768px) and (orientation: portrait) {
@@ -301,7 +315,7 @@
   <div id="transition-screen"><span>Entrando...</span></div>
 
   <div id="portfolio-overlay">
-    <iframe src="/portfolio.html" id="portfolio-frame" title="Portfolio"></iframe>
+    <iframe src="/portfolio.html" id="portfolio-frame" title="Portfolio" allow="autoplay"></iframe>
   </div>
   <button id="exit-btn">← Volver al cuarto</button>
 
