@@ -1,0 +1,209 @@
+{
+  "meta": {
+    "name": "Noé Ulises Machaca Chambilla",
+    "role": "Full-Stack Developer"
+  },
+  "_doc": {
+    "images": "Agrega capturas en public/projects/<slug>/ y referencia las rutas en detail.images (ej. /projects/crm-grupo-siena/1.png). Si images esta vacio se muestra el placeholder de gradiente."
+  },
+  "windows": [
+    {
+      "id": "about",
+      "title": "Sobre Mí",
+      "icon": "👤",
+      "type": "about",
+      "z": 10
+    },
+    {
+      "id": "projects",
+      "title": "Proyectos",
+      "icon": "📁",
+      "type": "projects"
+    },
+    {
+      "id": "skills",
+      "title": "Habilidades",
+      "icon": "⚙️",
+      "type": "skills"
+    },
+    {
+      "id": "hobbies",
+      "title": "Hobbies",
+      "icon": "🎮",
+      "type": "hobbies"
+    },
+    {
+      "id": "contact",
+      "title": "Contacto",
+      "icon": "✉️",
+      "type": "contact"
+    }
+  ],
+  "about": {
+    "heading": "Hola, soy Noé Ulises Machaca Chambilla",
+    "paragraphs": [
+      "Egresado de Ingeniería Estadística e Informática de la UNA Puno, con más de dos años de experiencia construyendo sistemas transaccionales, plataformas SaaS y aplicaciones móviles en producción.",
+      "Tengo dominio en el ciclo completo del software: modelado de datos, arquitectura de APIs, interfaces interactivas y despliegue en contenedores. Además, soy investigador registrado en RENACYT (CONCYTEC) y coautor de diez obras de software con registro de propiedad intelectual."
+    ],
+    "stats": [
+      { "num": "2+", "label": "años de experiencia" },
+      { "num": "10", "label": "obras registradas" },
+      { "num": "RENACYT", "label": "investigador CONCYTEC" }
+    ],
+    "primaryAction": { "label": "Ver mi trabajo", "window": "projects" },
+    "secondaryAction": { "label": "Hablemos →", "window": "contact" }
+  },
+  "projects": {
+    "items": [
+      {
+        "name": "CRM GRUPO SIENA",
+        "slug": "crm-grupo-siena",
+        "description": "CRM integrado con la API oficial de WhatsApp Business y agente de IA para respuestas automáticas. Sincronización automática de citas con Google Workspace.",
+        "tags": ["React", "NestJS", "TypeScript"],
+        "gradient": "linear-gradient(135deg, #0f2027, #2c5364)",
+        "glyph": "🤝",
+        "detail": {
+          "role": "Full-Stack Developer",
+          "client": "Grupo Siena",
+          "year": "2025",
+          "description": "CRM en producción para atención al cliente que centraliza las conversaciones de WhatsApp Business en una sola plataforma. Incluye un agente de IA que responde consultas frecuentes de forma automática y sincroniza las citas generadas con Google Workspace para evitar choques de agenda.",
+          "features": [
+            "Integración con la API oficial de WhatsApp Business",
+            "Agente de IA para respuestas automáticas",
+            "Sincronización de citas con Google Workspace",
+            "Panel de métricas y seguimiento de conversaciones",
+            "Multiusuario con perfiles de acceso"
+          ],
+          "links": { "demo": "", "repo": "" },
+          "images": []
+        }
+      },
+      {
+        "name": "Plataforma de Investigación",
+        "slug": "plataforma-investigacion",
+        "description": "SaaS para la gestión de semilleros y grupos de investigación (UNA Puno) para 300 usuarios. Autenticación, RBAC y motor de reportes en PDF y Excel.",
+        "tags": ["Next.js", "Supabase", "Django", "Docker"],
+        "gradient": "linear-gradient(135deg, #134e4a, #0f766e)",
+        "glyph": "🔬",
+        "detail": {
+          "role": "Desarrollador Backend + Frontend",
+          "client": "UNA Puno",
+          "year": "2024",
+          "description": "Plataforma SaaS para la gestión de semilleros y grupos de investigación de la universidad. Soporta a 300 usuarios con autenticación, control de acceso por roles y un motor de reportes que exporta indicadores académicos a PDF y Excel para las direcciones de investigación.",
+          "features": [
+            "Gestión de semilleros y grupos de investigación",
+            "Autenticación y RBAC para 300 usuarios",
+            "Motor de reportes en PDF y Excel",
+            "Inscripción y seguimiento de integrantes",
+            "Despliegue contenerizado con Docker"
+          ],
+          "links": { "demo": "", "repo": "" },
+          "images": []
+        }
+      },
+      {
+        "name": "RentalControl ERP",
+        "slug": "rentalcontrol-erp",
+        "description": "ERP en producción para el arriendo de maquinaria. Módulos de facturación, despachos, devoluciones y conciliación financiera con firmas digitales.",
+        "tags": ["Ruby on Rails", "PostgreSQL", "Hotwire"],
+        "gradient": "linear-gradient(135deg, #7c2d12, #c2410c)",
+        "glyph": "🏗️",
+        "detail": {
+          "role": "Desarrollador Full-Stack",
+          "client": "Empresa de arriendo de maquinaria",
+          "year": "2024",
+          "description": "ERP completo para el arriendo de maquinaria en producción. Cubre desde la facturación y el control de despachos hasta las devoluciones y la conciliación financiera, con firmas digitales para validar documentos operativos y transaccionales.",
+          "features": [
+            "Facturación y control de despachos",
+            "Gestión de devoluciones y conciliación financiera",
+            "Firmas digitales en documentos",
+            "Reportes operativos por periodo",
+            "Arquitectura modular con Hotwire"
+          ],
+          "links": { "demo": "", "repo": "" },
+          "images": []
+        }
+      },
+      {
+        "name": "Pandoo CL",
+        "slug": "pandoo-cl",
+        "description": "Form Builder dinámico drag-and-drop con generación de PDFs en AWS S3. Soporte para firmas digitales y gestión granular de permisos (RBAC).",
+        "tags": ["React", "Rails", "AWS S3"],
+        "gradient": "linear-gradient(135deg, #3b0764, #7c3aed)",
+        "glyph": "📝",
+        "detail": {
+          "role": "Desarrollador Full-Stack",
+          "client": "Pandoo",
+          "year": "2023",
+          "description": "Plataforma para construir formularios dinámicos con un editor drag-and-drop en tiempo real. Los formularios completados se convierten en PDFs firmables almacenados en AWS S3, con control granular de permisos por rol dentro de la organización.",
+          "features": [
+            "Form Builder drag-and-drop dinámico",
+            "Generación de PDFs con AWS S3",
+            "Firmas digitales en documentos",
+            "Gestión granular de permisos (RBAC)",
+            "Editor visual de formularios en tiempo real"
+          ],
+          "links": { "demo": "", "repo": "" },
+          "images": []
+        }
+      },
+      {
+        "name": "Endogastro Puno",
+        "slug": "endogastro-puno",
+        "description": "Ecosistema de salud digital (Web + Móvil iOS/Android). Historia clínica, farmacia, y autogestión de citas con pagos integrados vía Culqi.",
+        "tags": ["React Native", "Node.js", "Firebase"],
+        "gradient": "linear-gradient(135deg, #164e63, #0e7490)",
+        "glyph": "🏥",
+        "detail": {
+          "role": "Desarrollador Full-Stack (Web + Móvil)",
+          "client": "Endogastro",
+          "year": "2023",
+          "description": "Ecosistema de salud digital que conecta una app móvil iOS/Android con un panel web de administración. Incluye historia clínica digital, módulo de farmacia e inventario, y autogestión de citas con pagos integrados vía Culqi.",
+          "features": [
+            "Historia clínica digital",
+            "Módulo de farmacia e inventario",
+            "Autogestión de citas con pagos vía Culqi",
+            "App móvil iOS y Android con React Native",
+            "Panel web de administración"
+          ],
+          "links": { "demo": "", "repo": "" },
+          "images": []
+        }
+      }
+    ],
+    "cta": {
+      "text": "¿Te interesa lo que he construido? Cuéntame sobre tu proyecto.",
+      "buttonLabel": "Contáctame →",
+      "window": "contact"
+    }
+  },
+  "skills": [
+    "Ruby on Rails",
+    "Node.js / NestJS",
+    "React / Next.js",
+    "React Native",
+    "TypeScript / JavaScript",
+    "Django / Python",
+    "PostgreSQL / MySQL",
+    "Supabase / Firebase",
+    "Docker",
+    "AWS S3",
+    "Git",
+    "Hotwire / Stimulus"
+  ],
+  "hobbies": [
+    { "icon": "🎮", "title": "Videojuegos", "description": "Estrategia y RPGs." },
+    { "icon": "🎸", "title": "Música", "description": "Toco la guitarra." },
+    { "icon": "📚", "title": "Lectura", "description": "Ciencia ficción." }
+  ],
+  "contact": {
+    "heading": "Hablemos",
+    "intro": "Si quieres colaborar en algún proyecto o necesitas más información, no dudes en contactarme.",
+    "email": "noe.u.machaca@gmail.com",
+    "phone": "+51 965 100 861",
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/newneo4" },
+      { "label": "LinkedIn", "url": "https://linkedin.com/in/noe-u-machaca" }
+    ]
+  }
+}

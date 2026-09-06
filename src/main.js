@@ -33,10 +33,11 @@ composer.addPass(renderPass);
 
 // Camera starts directly inside the room, in front of the desk
 const cam = { px: 0, py: 1.35, pz: -4.5, tx: -0.1, ty: 0.82, tz: -7.0 };
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function updateCamera(t = 0) {
-  // Sway / Breathing effect
-  const swayX = Math.sin(t * 0.8) * 0.02;
-  const swayY = Math.cos(t * 0.5) * 0.015;
+  // Sway / Breathing effect (desactivado con reduced-motion; muy sutil en otro caso)
+  const swayX = reducedMotion ? 0 : Math.sin(t * 0.8) * 0.008;
+  const swayY = reducedMotion ? 0 : Math.cos(t * 0.5) * 0.006;
   camera.position.set(cam.px + swayX, cam.py + swayY, cam.pz);
   camera.lookAt(cam.tx, cam.ty, cam.tz);
 }
@@ -66,13 +67,15 @@ manager.onLoad = () => {
   // All models and textures loaded
   loader.style.opacity = '0';
   setTimeout(() => loader.style.display = 'none', 500);
-  setHint('Click to interact / Hover objects');
+  setHint('💻 Haz clic en la laptop para ver mi portafolio', 6000);
 };
 
 // ─── SCENE GEOMETRY ──────────────────────────────────────────────────────────
-const roomObj = createRoom(scene);
-const { screenMesh, laptopClickable, laptopGroup, mugGroup, chairGroup } = createProps(scene, manager);
-const interactableObjects = [laptopGroup, chairGroup, mugGroup];
+createRoom(scene);
+// Se guarda el objeto completo: props.screenMesh se asigna cuando el GLTF termina
+// de cargar (async), por eso no se desestructura en const.
+const props = createProps(scene, manager);
+const interactableObjects = [props.laptopGroup, props.chairGroup, props.mugGroup];
 
 // ─── STATE MACHINE ───────────────────────────────────────────────────────────
 let state = 'ROOM'; // ROOM | ZOOMING | PORTFOLIO
@@ -83,6 +86,7 @@ const hint = document.getElementById('hint');
 const crosshair = document.getElementById('crosshair');
 const overlay = document.getElementById('portfolio-overlay');
 const exitBtn = document.getElementById('exit-btn');
+const transitionScreen = document.getElementById('transition-screen');
 
 // ─── RAYCASTER ───────────────────────────────────────────────────────────────
 const raycaster = new THREE.Raycaster();
@@ -117,17 +121,17 @@ renderer.domElement.addEventListener('click', (e) => {
       const obj = hits[0].object;
 
       // Check if it's the laptop
-      if (laptopClickable.includes(obj)) {
+      if (props.laptopClickable.includes(obj)) {
         zoomToLaptop();
       } else {
         // Traverse up to find if it belongs to chair or mug
         let parent = obj;
         while (parent) {
-          if (parent === chairGroup) {
-            interactChair(chairGroup);
+          if (parent === props.chairGroup) {
+            interactChair(props.chairGroup);
             break;
-          } else if (parent === mugGroup) {
-            interactMug(mugGroup);
+          } else if (parent === props.mugGroup) {
+            interactMug(props.mugGroup);
             break;
           }
           parent = parent.parent;
@@ -143,13 +147,28 @@ function zoomToLaptop() {
   crosshair.classList.remove('visible');
   renderer.domElement.style.cursor = 'default';
 
+  // Pantalla a máximo brillo durante el acercamiento
+  if (props.screenMesh) {
+    props.screenMesh.material.emissiveIntensity = 1.2;
+    props.screenMesh.material.color.setScalar(1);
+  }
+
   gsap.to(cam, {
     px: -0.2, py: 1.15, pz: -6.3,
     tx: -0.2, ty: 1.1, tz: -7.5,
     duration: 1.6,
     ease: 'power3.inOut',
-    onComplete: showPortfolio,
+    onComplete: beginPortfolioEntry,
   });
+}
+
+function beginPortfolioEntry() {
+  // Flash de transición "Entrando en el sistema" antes de mostrar el portafolio
+  transitionScreen.classList.add('visible');
+  setTimeout(() => {
+    showPortfolio();
+    transitionScreen.classList.remove('visible');
+  }, 650);
 }
 
 function showPortfolio() {
@@ -201,7 +220,19 @@ function animate() {
   requestAnimationFrame(animate);
   const t = clock.getElapsedTime();
 
-
+  // "Monitor respirando": la pantalla enciende y apaga suavemente en ciclo lento
+  if (props.screenMesh && state === 'ROOM') {
+    if (reducedMotion) {
+      // Sin animación: brillo estático pero "encendido"
+      props.screenMesh.material.emissiveIntensity = 1.0;
+      props.screenMesh.material.color.setScalar(0.9);
+    } else {
+      const breathe = (Math.sin(t * 1.4) + 1) / 2; // 0..1, ciclo ~4.5s
+      props.screenMesh.material.emissiveIntensity = 0.25 + breathe * 0.95; // 0.25..1.2
+      props.screenMesh.material.color.setScalar(0.35 + breathe * 0.65);    // 0.35..1
+      deskFill.intensity = 6 + breathe * 2.4;                              // 6..8.4
+    }
+  }
   // Subtle parallax in ROOM state
   if (state === 'ROOM') {
     gsap.to(cam, {

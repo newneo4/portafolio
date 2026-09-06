@@ -297,6 +297,457 @@ p {
   color: var(--text-muted);
 }
 
+/* Project card gradient placeholder glyph */
+.card-glyph {
+  font-size: 2.6rem;
+  filter: grayscale(0.2);
+  opacity: 0.9;
+}
+
+.card:hover .card-glyph {
+  transform: scale(1.08);
+}
+
+.card-glyph {
+  transition: transform 0.3s;
+  filter: grayscale(0.2);
+}
+
+/* About stats */
+.about-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 1.5rem 0;
+}
+
+.stat {
+  flex: 1;
+  min-width: 130px;
+  background: var(--window-header);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-num {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ubuntu-orange);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* About & Project CTAs */
+.about-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+.about-actions .card {
+  padding: 10px 18px;
+  font-weight: 600;
+  border-color: #333;
+}
+
+.card.cta-contact {
+  background: rgba(233, 84, 32, 0.15);
+  border-color: rgba(233, 84, 32, 0.6);
+  color: var(--ubuntu-orange);
+  padding: 10px 18px;
+  font-weight: 600;
+}
+
+.card.cta-contact:hover {
+  background: rgba(233, 84, 32, 0.3);
+  color: #fff;
+}
+
+.project-cta {
+  margin-top: 2rem;
+  padding: 1.4rem;
+  background: var(--window-header);
+  border: 1px solid #333;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.project-cta p {
+  margin: 0 0 0.8rem 0;
+  color: var(--text-main);
+}
+
+/* ── Project card affordance (click → detail) ── */
+.project-card {
+  position: relative;
+}
+
+.project-card .card-open-hint {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s, transform 0.2s;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.project-card:hover .card-open-hint,
+.project-card:focus-visible .card-open-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-card .card-detail-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 45%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.project-card:hover .card-detail-hint,
+.project-card:focus-visible .card-detail-hint {
+  opacity: 1;
+}
+
+.project-card .card-detail-hint span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 3px 12px;
+}
+
+.project-card:focus-visible {
+  outline: 2px solid var(--ubuntu-orange);
+  outline-offset: 2px;
+}
+
+/* ── Detail window (GNOME-style viewer) ── */
+.detail-window {
+  width: 880px;
+  height: 720px;
+  top: calc(50% - 360px);
+  left: calc(50% - 440px + 30px);
+}
+
+.detail-content {
+  overflow-y: auto;
+}
+
+.detail-viewer {
+  background: #161616;
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-bottom: 1.2rem;
+  overflow: hidden;
+}
+
+.detail-stage {
+  position: relative;
+  min-height: 300px;
+  max-height: 46vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    repeating-conic-gradient(#1b1b1b 0% 25%, #222 0% 50%) 50% / 28px 28px;
+  cursor: zoom-in;
+}
+
+.detail-main-image {
+  max-width: 100%;
+  max-height: 46vh;
+  object-fit: contain;
+  display: block;
+}
+
+.detail-fallback {
+  width: 100%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.detail-fallback-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+
+.detail-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--window-header);
+  border-top: 1px solid #333;
+}
+
+.detail-nav {
+  min-width: 64px;
+  padding: 5px 12px;
+  background: #3a3a3a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.detail-nav:hover:not(:disabled) {
+  background: rgba(233, 84, 32, 0.6);
+}
+
+.detail-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.detail-counter {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.detail-thumbs {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--window-bg);
+  border-top: 1px solid #333;
+  flex-wrap: wrap;
+}
+
+.detail-thumb {
+  width: 76px;
+  height: 50px;
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 0;
+  border: 2px solid transparent;
+  background: #222;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.detail-thumb:hover {
+  transform: translateY(-2px);
+}
+
+.detail-thumb.active {
+  border-color: var(--ubuntu-orange);
+}
+
+.detail-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb-glyph {
+  font-size: 1.2rem;
+}
+
+.detail-props {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 1.2rem;
+}
+
+.detail-prop {
+  background: var(--window-header);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.detail-prop .prop-label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.detail-prop .prop-value {
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.detail-text h3 {
+  color: var(--ubuntu-orange);
+  font-size: 1rem;
+  margin: 0 0 6px 0;
+}
+
+.detail-text p {
+  color: #ccc;
+}
+
+.detail-features {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.detail-features li {
+  position: relative;
+  padding-left: 22px;
+  color: #ccc;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.detail-features li::before {
+  content: '✔';
+  position: absolute;
+  left: 2px;
+  color: var(--ubuntu-orange);
+  font-size: 0.8rem;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+.detail-action {
+  display: inline-block;
+  background: #3a3a3a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.detail-action:hover {
+  background: rgba(233, 84, 32, 0.6);
+  color: #fff;
+  text-decoration: none;
+}
+
+.detail-action.detail-back {
+  background: transparent;
+  border-color: #555;
+  color: #ccc;
+}
+
+.detail-action.detail-back:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Activities dropdown menu */
+.activities-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid #333;
+  border-radius: 6px;
+  min-width: 170px;
+  padding: 6px;
+  display: none;
+  z-index: 10000;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.activities-menu.open {
+  display: block;
+}
+
+.menu-item {
+  padding: 9px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.menu-item:hover {
+  background: rgba(233, 84, 32, 0.25);
+  color: #fff;
+}
+
+/* Empty desktop helper */
+.empty-desktop {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+.empty-desktop.show {
+  opacity: 1;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.empty-desktop p {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.empty-desktop .empty-sub {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
 .card-tags {
   display: flex;
   flex-wrap: wrap;
@@ -359,5 +810,15 @@ screen and (max-height: 650px) {
   .window-controls {
     pointer-events: all;
     /* Asegurar que los botones sigan siendo clicables */
+  }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

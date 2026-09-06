@@ -16,250 +16,46 @@
   <!-- Top Bar -->
   <div class="topbar">
     <div class="topbar-left">
-      <span class="topbar-item">Actividades</span>
+      <span class="topbar-item" id="btn-activities" style="position:relative;" onclick="toggleActivities(event)">Actividades ▾</span>
+      <div class="activities-menu" id="activities-menu" role="menu" aria-label="Actividades"></div>
     </div>
     <div class="topbar-center">
-      <span class="topbar-item" id="clock">12:00 PM</span>
+      <span class="topbar-item" id="clock">..:..</span>
     </div>
     <div class="topbar-right">
       <span class="topbar-item">🔋</span>
       <span class="topbar-item">📶</span>
-      <span class="topbar-item" id="btn-sound" style="cursor:pointer;" title="Silenciar/Reproducir">🔊</span>
+      <span class="topbar-item" id="btn-sound" style="cursor:pointer;" title="Silenciar/Reproducir" role="button" aria-label="Silenciar o reproducir música">🔊</span>
       <span class="topbar-item">▼</span>
     </div>
   </div>
 
+  <!-- Empty desktop helper -->
+  <div class="empty-desktop" id="empty-desktop">
+    <span class="empty-icon">🖥️</span>
+    <p>Escritorio vacío</p>
+    <p class="empty-sub">Usa el dock o el menú Actividades para explorar.</p>
+  </div>
+
   <!-- Dock (Left) -->
-  <div class="dock">
-    <div class="dock-icon active" onclick="openWindow('about')" title="Sobre Mí">👤</div>
-    <div class="dock-icon" onclick="openWindow('projects')" title="Proyectos">📁</div>
-    <div class="dock-icon" onclick="openWindow('skills')" title="Habilidades">⚙️</div>
-    <div class="dock-icon" onclick="openWindow('hobbies')" title="Hobbies">🎮</div>
-    <div class="dock-icon" onclick="openWindow('contact')" title="Contacto">✉️</div>
-  </div>
+  <div class="dock" id="dock"></div>
 
-  <!-- Windows -->
-
-  <!-- About Window -->
-  <div class="os-window" id="win-about" style="z-index: 10;">
-    <div class="window-header" onmousedown="startDrag(event, 'win-about')">
-      <div class="window-title">Sobre Mí</div>
-      <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('about')" aria-label="Minimizar">_</button>
-        <button class="control-btn maximize" aria-label="Maximizar">□</button>
-        <button class="control-btn close" onclick="closeWindow('about')" aria-label="Cerrar">X</button>
-      </div>
-    </div>
-    <div class="window-content" onmousedown="focusWindow('win-about')">
-      <h2>Hola, soy Noé Ulises Machaca Chambilla</h2>
-      <p>Egresado de Ingeniería Estadística e Informática de la UNA Puno, con más de dos años de experiencia
-        construyendo sistemas transaccionales, plataformas SaaS y aplicaciones móviles en producción.</p>
-      <p>Tengo dominio en el ciclo completo del software: modelado de datos, arquitectura de APIs, interfaces
-        interactivas y despliegue en contenedores. Además, soy investigador registrado en RENACYT (CONCYTEC) y coautor
-        de diez obras de software con registro de propiedad intelectual.</p>
-      <button class="card" style="cursor:pointer;" onclick="openWindow('projects')">Ver mi trabajo</button>
-    </div>
-  </div>
-
-  <!-- Projects Window -->
-  <div class="os-window" id="win-projects">
-    <div class="window-header" onmousedown="startDrag(event, 'win-projects')">
-      <div class="window-title">Proyectos</div>
-      <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('projects')" aria-label="Minimizar">_</button>
-        <button class="control-btn maximize" aria-label="Maximizar">□</button>
-        <button class="control-btn close" onclick="closeWindow('projects')" aria-label="Cerrar">X</button>
-      </div>
-    </div>
-    <div class="window-content" onmousedown="focusWindow('win-projects')">
-      <div class="grid-layout">
-
-        <!-- Proyecto 1 -->
-        <div class="card">
-          <div class="card-image">
-            <img src="/textures/background/fondo.jpeg" alt="CRM Grupo Siena" />
-          </div>
-          <div class="card-content">
-            <h3>CRM GRUPO SIENA</h3>
-            <p>CRM integrado con la API oficial de WhatsApp Business y agente de IA para respuestas automáticas.
-              Sincronización automática de citas con Google Workspace.</p>
-            <div class="card-tags">
-              <span class="card-tag">React</span>
-              <span class="card-tag">NestJS</span>
-              <span class="card-tag">TypeScript</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Proyecto 2 -->
-        <div class="card">
-          <div class="card-image">
-            <img src="/textures/background/fondo.jpeg" alt="Sistema UNA Puno" />
-          </div>
-          <div class="card-content">
-            <h3>Plataforma de Investigación</h3>
-            <p>SaaS para la gestión de semilleros y grupos de investigación (UNA Puno) para 300 usuarios. Autenticación,
-              RBAC y motor de reportes en PDF y Excel.</p>
-            <div class="card-tags">
-              <span class="card-tag">Next.js</span>
-              <span class="card-tag">Supabase</span>
-              <span class="card-tag">Django</span>
-              <span class="card-tag">Docker</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Proyecto 3 -->
-        <div class="card">
-          <div class="card-image">
-            <img src="/textures/background/fondo.jpeg" alt="RentalControl ERP" />
-          </div>
-          <div class="card-content">
-            <h3>RentalControl ERP</h3>
-            <p>ERP en producción para el arriendo de maquinaria. Módulos de facturación, despachos, devoluciones y
-              conciliación financiera con firmas digitales.</p>
-            <div class="card-tags">
-              <span class="card-tag">Ruby on Rails</span>
-              <span class="card-tag">PostgreSQL</span>
-              <span class="card-tag">Hotwire</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Proyecto 4 -->
-        <div class="card">
-          <div class="card-image">
-            <img src="/textures/background/fondo.jpeg" alt="Pandoo CL" />
-          </div>
-          <div class="card-content">
-            <h3>Pandoo CL</h3>
-            <p>Form Builder dinámico drag-and-drop con generación de PDFs en AWS S3. Soporte para firmas digitales y
-              gestión granular de permisos (RBAC).</p>
-            <div class="card-tags">
-              <span class="card-tag">React</span>
-              <span class="card-tag">Rails</span>
-              <span class="card-tag">AWS S3</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Proyecto 5 -->
-        <div class="card">
-          <div class="card-image">
-            <img src="/textures/background/fondo.jpeg" alt="Endogastro Puno" />
-          </div>
-          <div class="card-content">
-            <h3>Endogastro Puno</h3>
-            <p>Ecosistema de salud digital (Web + Móvil iOS/Android). Historia clínica, farmacia, y autogestión de citas
-              con pagos integrados vía Culqi.</p>
-            <div class="card-tags">
-              <span class="card-tag">React Native</span>
-              <span class="card-tag">Node.js</span>
-              <span class="card-tag">Firebase</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Skills Window -->
-  <div class="os-window" id="win-skills">
-    <div class="window-header" onmousedown="startDrag(event, 'win-skills')">
-      <div class="window-title">Habilidades</div>
-      <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('skills')" aria-label="Minimizar">_</button>
-        <button class="control-btn maximize" aria-label="Maximizar">□</button>
-        <button class="control-btn close" onclick="closeWindow('skills')" aria-label="Cerrar">X</button>
-      </div>
-    </div>
-    <div class="window-content" onmousedown="focusWindow('win-skills')">
-      <div class="skills-section">
-        <div class="skill-tag">Ruby on Rails</div>
-        <div class="skill-tag">Node.js / NestJS</div>
-        <div class="skill-tag">React / Next.js</div>
-        <div class="skill-tag">React Native</div>
-        <div class="skill-tag">TypeScript / JavaScript</div>
-        <div class="skill-tag">Django / Python</div>
-        <div class="skill-tag">PostgreSQL / MySQL</div>
-        <div class="skill-tag">Supabase / Firebase</div>
-        <div class="skill-tag">Docker</div>
-        <div class="skill-tag">AWS S3</div>
-        <div class="skill-tag">Git</div>
-        <div class="skill-tag">Hotwire / Stimulus</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hobbies Window -->
-  <div class="os-window" id="win-hobbies">
-    <div class="window-header" onmousedown="startDrag(event, 'win-hobbies')">
-      <div class="window-title">Hobbies</div>
-      <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('hobbies')" aria-label="Minimizar">_</button>
-        <button class="control-btn maximize" aria-label="Maximizar">□</button>
-        <button class="control-btn close" onclick="closeWindow('hobbies')" aria-label="Cerrar">X</button>
-      </div>
-    </div>
-    <div class="window-content" onmousedown="focusWindow('win-hobbies')">
-      <div class="grid-layout">
-        <div class="card" style="text-align: center;">
-          <span style="font-size:2rem; display:block; margin-bottom:10px;">🎮</span>
-          <h3>Videojuegos</h3>
-          <p>Estrategia y RPGs.</p>
-        </div>
-        <div class="card" style="text-align: center;">
-          <span style="font-size:2rem; display:block; margin-bottom:10px;">🎸</span>
-          <h3>Música</h3>
-          <p>Toco la guitarra.</p>
-        </div>
-        <div class="card" style="text-align: center;">
-          <span style="font-size:2rem; display:block; margin-bottom:10px;">📚</span>
-          <h3>Lectura</h3>
-          <p>Ciencia ficción.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contact Window -->
-  <div class="os-window" id="win-contact">
-    <div class="window-header" onmousedown="startDrag(event, 'win-contact')">
-      <div class="window-title">Contacto</div>
-      <div class="window-controls">
-        <button class="control-btn minimize" onclick="closeWindow('contact')" aria-label="Minimizar">_</button>
-        <button class="control-btn maximize" aria-label="Maximizar">□</button>
-        <button class="control-btn close" onclick="closeWindow('contact')" aria-label="Cerrar">X</button>
-      </div>
-    </div>
-    <div class="window-content" onmousedown="focusWindow('win-contact')">
-      <h2>Hablemos</h2>
-      <p>Si quieres colaborar en algún proyecto o necesitas más información, no dudes en contactarme.</p>
-      
-      <a href="mailto:noe.u.machaca@gmail.com" style="font-size: 1.5rem; font-weight:bold; display:block; margin-bottom:0.5rem; color: var(--ubuntu-orange);">noe.u.machaca@gmail.com</a>
-      <p style="font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-muted);">📞 +51 965 100 861</p>
-
-      <div style="display: flex; gap: 1rem;">
-        <a href="https://github.com/newneo4" target="_blank" style="color: white; text-decoration: underline;">GitHub</a>
-        <a href="https://linkedin.com/in/noe-u-machaca" target="_blank" style="color: white; text-decoration: underline;">LinkedIn</a>
-      </div>
-    </div>
-  </div>
+  <!-- Windows (rendered from JSON) -->
+  <div id="windows-root"></div>
 
   <!-- Audio Player -->
   <audio id="bg-music" loop src="/audio/music.mp3"></audio>
 
   <script>
     let highestZIndex = 10;
-    
+
     // --- Audio Logic ---
     const bgMusic = document.getElementById('bg-music');
     const btnSound = document.getElementById('btn-sound');
-    
+
     // Autoplay when the frame loads (works because user interacted with 3D scene)
     window.addEventListener('DOMContentLoaded', () => {
-      bgMusic.volume = 0.5; // Empezar con volumen moderado
+      bgMusic.volume = 0.2; // Empezar suave, el usuario ajusta con el botón
       bgMusic.play().catch(() => {
         // En caso de que el navegador bloquee el autoplay de todos modos
         btnSound.textContent = '🔇';
@@ -290,22 +86,40 @@
       const win = document.getElementById('win-' + id);
       if (win) {
         win.classList.add('open');
+        win.setAttribute('aria-hidden', 'false');
         focusWindow('win-' + id);
       }
 
       // Update dock indicator
       document.querySelectorAll('.dock-icon').forEach(el => el.classList.remove('active'));
-      // Find the clicked dock icon (simplified approach: match by title)
-      const icons = Array.from(document.querySelectorAll('.dock-icon'));
-      const activeIcon = icons.find(icon => icon.getAttribute('onclick').includes(`'${id}'`));
+      const activeIcon = Array.from(document.querySelectorAll('.dock-icon'))
+        .find(icon => icon.dataset.window === id);
       if (activeIcon) activeIcon.classList.add('active');
+
+      updateEmptyDesktop();
     }
 
     function closeWindow(id) {
       const win = document.getElementById('win-' + id);
       if (win) {
         win.classList.remove('open');
+        win.setAttribute('aria-hidden', 'true');
       }
+      updateEmptyDesktop();
+    }
+
+    function toggleActivities(e) {
+      e.stopPropagation();
+      document.getElementById('activities-menu').classList.toggle('open');
+    }
+
+    document.addEventListener('click', () => {
+      document.getElementById('activities-menu').classList.remove('open');
+    });
+
+    function updateEmptyDesktop() {
+      const anyOpen = document.querySelectorAll('.os-window.open').length > 0;
+      document.getElementById('empty-desktop').classList.toggle('show', !anyOpen);
     }
 
     function focusWindow(winId) {
@@ -315,17 +129,6 @@
         win.style.zIndex = highestZIndex;
       }
     }
-
-    // --- Maximize Logic ---
-    document.querySelectorAll('.control-btn.maximize').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const win = e.target.closest('.os-window');
-        if (win) {
-          win.classList.toggle('maximized');
-          focusWindow(win.id);
-        }
-      });
-    });
 
     // --- Drag and Drop ---
     let isDragging = false;
@@ -371,11 +174,354 @@
       document.removeEventListener('mouseup', stopDrag);
     }
 
-    // Open the about window by default initially
-    setTimeout(() => {
-      openWindow('about');
-    }, 500);
+    // ── CONTENIDO DATA-DRIVEN (JSON) ────────────────────────────────────────
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, c => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+      ));
+    }
 
+    function windowHeader(win) {
+      return `
+        <div class="window-header" onmousedown="startDrag(event, 'win-${win.id}')">
+          <div class="window-title">${escapeHtml(win.title)}</div>
+          <div class="window-controls">
+            <button class="control-btn minimize" onclick="closeWindow('${win.id}')" aria-label="Minimizar">_</button>
+            <button class="control-btn maximize" aria-label="Maximizar">□</button>
+            <button class="control-btn close" onclick="closeWindow('${win.id}')" aria-label="Cerrar">X</button>
+          </div>
+        </div>`;
+    }
+
+    function aboutContent(a) {
+      const stats = a.stats.map(s => `
+        <div class="stat"><span class="stat-num">${escapeHtml(s.num)}</span><span class="stat-label">${escapeHtml(s.label)}</span></div>`).join('');
+      return `
+        <h2>${escapeHtml(a.heading)}</h2>
+        ${a.paragraphs.map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+        <div class="about-stats">${stats}</div>
+        <div class="about-actions">
+          <button class="card" style="cursor:pointer;" onclick="openWindow('${a.primaryAction.window}')">${escapeHtml(a.primaryAction.label)}</button>
+          <button class="card cta-contact" style="cursor:pointer;" onclick="openWindow('${a.secondaryAction.window}')">${escapeHtml(a.secondaryAction.label)}</button>
+        </div>`;
+    }
+
+    function projectsContent(p) {
+      const cards = p.items.map(pr => `
+        <div class="card project-card" role="button" tabindex="0"
+             data-slug="${escapeHtml(pr.slug)}"
+             aria-label="Ver detalles de ${escapeHtml(pr.name)}">
+          <div class="card-image" style="background: ${pr.gradient};">
+            <span class="card-glyph">${escapeHtml(pr.glyph)}</span>
+            <span class="card-open-hint">↗</span>
+          </div>
+          <div class="card-content">
+            <h3>${escapeHtml(pr.name)}</h3>
+            <p>${escapeHtml(pr.description)}</p>
+            <div class="card-tags">${pr.tags.map(t => `<span class="card-tag">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+          <div class="card-detail-hint"><span>Ver detalles</span></div>
+        </div>`).join('');
+
+      const cta = p.cta ? `
+        <div class="project-cta">
+          <p>${escapeHtml(p.cta.text)}</p>
+          <button class="card cta-contact" style="cursor:pointer;" onclick="openWindow('${p.cta.window}')">${escapeHtml(p.cta.buttonLabel)}</button>
+        </div>` : '';
+
+      return `<div class="grid-layout">${cards}</div>${cta}`;
+    }
+
+    function skillsContent(skills) {
+      return `<div class="skills-section">${skills.map(s => `<div class="skill-tag">${escapeHtml(s)}</div>`).join('')}</div>`;
+    }
+
+    function hobbiesContent(hobbies) {
+      const cards = hobbies.map(h => `
+        <div class="card" style="text-align: center;">
+          <span style="font-size:2rem; display:block; margin-bottom:10px;">${escapeHtml(h.icon)}</span>
+          <h3>${escapeHtml(h.title)}</h3>
+          <p>${escapeHtml(h.description)}</p>
+        </div>`).join('');
+      return `<div class="grid-layout">${cards}</div>`;
+    }
+
+    function contactContent(c) {
+      const links = c.links.map(l => `
+        <a href="${escapeHtml(l.url)}" target="_blank" style="color: white; text-decoration: underline;">${escapeHtml(l.label)}</a>`).join('');
+      return `
+        <h2>${escapeHtml(c.heading)}</h2>
+        <p>${escapeHtml(c.intro)}</p>
+        <a href="mailto:${escapeHtml(c.email)}" style="font-size: 1.5rem; font-weight:bold; display:block; margin-bottom:0.5rem; color: var(--ubuntu-orange);">${escapeHtml(c.email)}</a>
+        <p style="font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-muted);">📞 ${escapeHtml(c.phone)}</p>
+        <div style="display: flex; gap: 1rem;">${links}</div>`;
+    }
+
+    // ── DETALLE DE PROYECTO (visión Ubuntu / visor de galería) ────────────────
+    let APP_DATA = null;
+    const detail = { open: false, project: null, index: 0, slides: [], lastCard: null };
+
+    function projectSlides(project) {
+      const imgs = (project.detail && project.detail.images && project.detail.images.length)
+        ? project.detail.images
+        : [];
+      return imgs.length ? imgs.map(src => ({ src })) : [{ src: null }];
+    }
+
+    function fallbackSlideHtml(project) {
+      return `<div class="detail-fallback" style="background: ${project.gradient};">
+        <span class="card-glyph" style="font-size:4rem;">${escapeHtml(project.glyph)}</span>
+        <span class="detail-fallback-label">${escapeHtml(project.name)}</span>
+      </div>`;
+    }
+
+    function buildSlideHtml(item, project) {
+      if (item.src) {
+        return `<img class="detail-main-image" src="${escapeHtml(item.src)}" alt="${escapeHtml(project.name)}" onerror="window.__projectImgFail(${detail.index})">`;
+      }
+      return fallbackSlideHtml(project);
+    }
+
+    window.__projectImgFail = function (i) {
+      if (detail.slides[i]) detail.slides[i].src = null;
+      renderDetailStage();
+    };
+
+    function renderDetailStage() {
+      const win = document.getElementById('win-detail');
+      if (!win) return;
+      const stage = win.querySelector('.detail-stage');
+      const counter = win.querySelector('.detail-counter');
+      stage.innerHTML = buildSlideHtml(detail.slides[detail.index], detail.project);
+      counter.textContent = `${detail.index + 1} / ${detail.slides.length}`;
+      const prev = win.querySelector('.detail-nav-prev');
+      const next = win.querySelector('.detail-nav-next');
+      prev.disabled = detail.index <= 0;
+      next.disabled = detail.index >= detail.slides.length - 1;
+    }
+
+    function renderDetailThumbs() {
+      const win = document.getElementById('win-detail');
+      if (!win) return;
+      const wrap = win.querySelector('.detail-thumbs');
+      wrap.innerHTML = detail.slides.map((s, i) => `
+        <button class="detail-thumb${i === detail.index ? ' active' : ''}" data-i="${i}"
+          aria-label="Imagen ${i + 1} de ${detail.slides.length}">
+          ${s.src ? `<img src="${escapeHtml(s.src)}" alt="">` : `<span class="thumb-glyph">${escapeHtml(detail.project.glyph)}</span>`}
+        </button>`).join('');
+      wrap.querySelectorAll('.detail-thumb').forEach(btn => {
+        btn.addEventListener('click', () => detailGoto(parseInt(btn.dataset.i, 10)));
+      });
+    }
+
+    function updateDetailGallery() {
+      renderDetailStage();
+      renderDetailThumbs();
+    }
+
+    function detailPrev() { if (detail.index > 0) { detail.index--; updateDetailGallery(); } }
+    function detailNext() { if (detail.index < detail.slides.length - 1) { detail.index++; updateDetailGallery(); } }
+    function detailGoto(i) { if (i >= 0 && i < detail.slides.length) { detail.index = i; updateDetailGallery(); } }
+
+    function detailWindowHtml(project) {
+      const d = project.detail || {};
+      const stack = (d.stack && d.stack.length) ? d.stack : project.tags;
+      const props = [
+        ['Rol', d.role],
+        ['Cliente', d.client],
+        ['Año', d.year],
+        ['Stack', stack.join(', ')]
+      ].filter(([, v]) => v && v.length).map(([l, v]) => `
+        <div class="detail-prop"><span class="prop-label">${escapeHtml(l)}</span><span class="prop-value">${escapeHtml(v)}</span></div>`).join('');
+
+      const features = (d.features || []).map(f => `<li>${escapeHtml(f)}</li>`).join('');
+      const hasLinks = d.links && (d.links.demo || d.links.repo);
+
+      return `
+        <div class="os-window detail-window" id="win-detail" role="region" aria-label="Detalle de ${escapeHtml(project.name)}" aria-hidden="true" style="z-index: ${++highestZIndex};">
+          <div class="window-header" onmousedown="startDrag(event, 'win-detail')">
+            <div class="window-title">${escapeHtml(project.name)}</div>
+            <div class="window-controls">
+              <button class="control-btn minimize" onclick="closeProjectDetail()" aria-label="Minimizar">_</button>
+              <button class="control-btn maximize" aria-label="Maximizar">□</button>
+              <button class="control-btn close" onclick="closeProjectDetail()" aria-label="Cerrar">X</button>
+            </div>
+          </div>
+          <div class="window-content detail-content" onmousedown="focusWindow('win-detail')">
+            <div class="detail-viewer">
+              <div class="detail-stage"></div>
+              <div class="detail-toolbar">
+                <button class="detail-nav detail-nav-prev" aria-label="Imagen anterior">◀</button>
+                <span class="detail-counter">1 / 1</span>
+                <button class="detail-nav detail-nav-next" aria-label="Imagen siguiente">▶</button>
+              </div>
+              <div class="detail-thumbs"></div>
+            </div>
+            <div class="detail-props">${props}</div>
+            <div class="detail-text">
+              <h3>Acerca del proyecto</h3>
+              <p>${escapeHtml(d.description || project.description)}</p>
+            </div>
+            ${features ? `<div class="detail-text"><h3>Funcionalidades</h3><ul class="detail-features">${features}</ul></div>` : ''}
+            <div class="detail-actions">
+              ${hasLinks ? `
+                ${d.links.demo ? `<a class="detail-action" href="${escapeHtml(d.links.demo)}" target="_blank" rel="noopener">🌐 Ver demo</a>` : ''}
+                ${d.links.repo ? `<a class="detail-action" href="${escapeHtml(d.links.repo)}" target="_blank" rel="noopener">⌨ Ver código</a>` : ''}` : ''}
+              <button class="detail-action detail-back" onclick="closeProjectDetail()">← Volver a los proyectos</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function openProjectDetail(slug) {
+      const project = APP_DATA && APP_DATA.projects.items.find(p => p.slug === slug);
+      if (!project) return;
+
+      const card = document.querySelector(`.project-card[data-slug="${slug}"]`);
+      if (card) detail.lastCard = card;
+
+      const existing = document.getElementById('win-detail');
+      if (existing) existing.remove();
+
+      document.getElementById('windows-root').insertAdjacentHTML('beforeend', detailWindowHtml(project));
+
+      const win = document.getElementById('win-detail');
+      win.classList.add('open');
+      win.setAttribute('aria-hidden', 'false');
+      focusWindow('win-detail');
+
+      detail.open = true;
+      detail.project = project;
+      detail.index = 0;
+      detail.slides = projectSlides(project);
+
+      win.querySelector('.detail-nav-prev').addEventListener('click', detailPrev);
+      win.querySelector('.detail-nav-next').addEventListener('click', detailNext);
+      bindMaximize();
+      updateDetailGallery();
+      updateEmptyDesktop();
+    }
+
+    function closeProjectDetail() {
+      const win = document.getElementById('win-detail');
+      if (!win) return;
+      win.classList.remove('open');
+      win.setAttribute('aria-hidden', 'true');
+      detail.open = false;
+      setTimeout(() => {
+        if (win.parentNode) win.parentNode.removeChild(win);
+      }, 250);
+      updateEmptyDesktop();
+      if (detail.lastCard && document.body.contains(detail.lastCard)) {
+        detail.lastCard.focus();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!detail.open) return;
+      if (e.key === 'Escape') { closeProjectDetail(); e.preventDefault(); }
+      else if (e.key === 'ArrowLeft') { detailPrev(); e.preventDefault(); }
+      else if (e.key === 'ArrowRight') { detailNext(); e.preventDefault(); }
+    });
+
+    function renderWindow(win, data) {
+      const contentFns = {
+        about: aboutContent,
+        projects: projectsContent,
+        skills: skillsContent,
+        hobbies: hobbiesContent,
+        contact: contactContent
+      };
+      const fn = contentFns[win.type];
+      if (!fn) return '';
+      const zStyle = win.z ? ` style="z-index: ${win.z};"` : '';
+      return `
+        <div class="os-window" id="win-${win.id}"${zStyle} role="region" aria-label="${escapeHtml(win.title)}" aria-hidden="true">
+          ${windowHeader(win)}
+          <div class="window-content" onmousedown="focusWindow('win-${win.id}')">
+            ${fn(data[win.type])}
+          </div>
+        </div>`;
+    }
+
+    function renderDockAndMenu(windows) {
+      const dock = document.getElementById('dock');
+      const menu = document.getElementById('activities-menu');
+
+      dock.innerHTML = windows.map((w, i) => `
+        <div class="dock-icon${i === 0 ? ' active' : ''}" data-window="${w.id}" role="button" tabindex="0"
+             aria-label="Abrir ${escapeHtml(w.title)}" title="${escapeHtml(w.title)}">${escapeHtml(w.icon)}</div>`).join('');
+
+      menu.innerHTML = windows.map(w => `
+        <div class="menu-item" role="menuitem" data-window="${w.id}">${escapeHtml(w.icon)} ${escapeHtml(w.title)}</div>`).join('');
+
+      dock.querySelectorAll('.dock-icon').forEach(icon => {
+        icon.addEventListener('click', () => openWindow(icon.dataset.window));
+        icon.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            openWindow(icon.dataset.window);
+            e.preventDefault();
+          }
+        });
+      });
+
+      menu.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          openWindow(item.dataset.window);
+          toggleActivities(e);
+        });
+      });
+    }
+
+    // --- Maximize Logic (after windows exist) ---
+    function bindMaximize() {
+      document.querySelectorAll('.control-btn.maximize').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const win = e.target.closest('.os-window');
+          if (win) {
+            win.classList.toggle('maximized');
+            focusWindow(win.id);
+          }
+        });
+      });
+    }
+
+    (async function init() {
+      try {
+        const res = await fetch('/data/portfolio.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        APP_DATA = data;
+
+        renderDockAndMenu(data.windows);
+        document.getElementById('windows-root').innerHTML =
+          data.windows.map(w => renderWindow(w, data)).join('');
+        bindMaximize();
+
+        // Cards de proyectos → abren el detalle (clic / teclado)
+        document.querySelectorAll('.project-card').forEach(card => {
+          card.addEventListener('click', () => openProjectDetail(card.dataset.slug));
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              openProjectDetail(card.dataset.slug);
+              e.preventDefault();
+            }
+          });
+        });
+
+        // Open the about window by default
+        setTimeout(() => {
+          openWindow('about');
+        }, 500);
+      } catch (err) {
+        document.getElementById('windows-root').innerHTML = `
+          <div class="empty-desktop show">
+            <span class="empty-icon">⚠️</span>
+            <p>No se pudo cargar el contenido</p>
+            <p class="empty-sub">${escapeHtml(err.message)}</p>
+          </div>`;
+      }
+    })();
   </script>
 </body>
 

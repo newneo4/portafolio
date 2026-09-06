@@ -12,16 +12,18 @@ export function createProps(scene, manager) {
 
   // Shared materials
   const darkWood = new THREE.MeshStandardMaterial({ color: 0x1e0d04, roughness: 0.85, metalness: 0.05 });
-  const aluminum = new THREE.MeshStandardMaterial({ color: 0x1c1c1e, roughness: 0.35, metalness: 0.85 });
 
   // ── Desk ─────────────────────────────────────────────────────────────────────
   const desk = buildDesk(group, darkWood);
 
   // ── Laptop (on desk) ─────────────────────────────────────────────────────────
-  const { screenMesh, laptopClickable, laptopGroup } = buildLaptop(desk, manager);
+  // buildLaptop devuelve un objeto "vivo": su campo screenMesh se rellena cuando
+  // el GLTF termina de cargar (async). Lo reutilizamos y adjuntamos el resto de
+  // props para que createProps devuelva SIEMPRE la misma referencia actualizada.
+  const props = buildLaptop(desk, manager);
 
   // ── Coffee Mug (right side of desk) ──────────────────────────────────────────
-  const mugGroup = buildMug(desk);
+  props.mugGroup = buildMug(desk);
 
   // ── Trash Can (next to desk on the floor) ────────────────────────────────────
   buildTrashCan(group, manager);
@@ -30,7 +32,7 @@ export function createProps(scene, manager) {
   buildBookshelf(group);
 
   // ── Office Chair ──────────────────────────────────────────────────────────────
-  const chairGroup = buildChair(group);
+  props.chairGroup = buildChair(group);
 
   // ── Rugs ─────────────────────────────────────────────────────────────────────
   buildRugs(group);
@@ -41,7 +43,7 @@ export function createProps(scene, manager) {
   // ── Posters (Back wall) ──────────────────────────────────────────────────
   buildPosters(group, manager);
 
-  return { screenMesh, laptopClickable, laptopGroup, mugGroup, chairGroup };
+  return props;
 }
 
 export function interactChair(chairGroup) {
@@ -118,6 +120,8 @@ function buildLaptop(deskGroup, manager) {
   laptopGroup.position.set(-0.1, 0.98, 0.1);
   deskGroup.add(laptopGroup);
 
+  const result = { screenMesh: null, laptopClickable, laptopGroup };
+
   const gltfLoader = new GLTFLoader(manager);
   gltfLoader.load('/models/laptop.glb', (gltf) => {
     const laptopModel = gltf.scene;
@@ -182,10 +186,12 @@ function buildLaptop(deskGroup, manager) {
     laptopModel.add(screenOverlay);
     laptopClickable.push(screenOverlay);
 
+    result.screenMesh = screenOverlay;
+
     laptopGroup.add(laptopModel);
   });
 
-  return { screenMesh: null, laptopClickable, laptopGroup };
+  return result;
 }
 
 
