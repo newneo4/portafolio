@@ -1,16 +1,37 @@
-# React + Vite
+# Portfolio 3D
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portafolio interactivo en una escena 3D: un cuarto navegable donde un portátil abre un escritorio Ubuntu simulado (ventanas, dock y topbar) con el contenido curriculares.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [Three.js](https://threejs.org/) — escena 3D, luces, sombras y post-procesado.
+- [GSAP](https://gsap.com/) — transiciones y animaciones de cámara.
+- [Vite](https://vite.dev/) — bundler y servidor de desarrollo.
+- Vanilla JS (sin frameworks).
 
-## React Compiler
+## Comandos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run dev     # servidor de desarrollo
+npm run build   # build de producción en dist/
+npm run lint    # ESLint
+npm run preview # previsualizar el build
+```
 
-## Expanding the ESLint configuration
+## Estructura
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `src/main.js` — lógica principal: cámara, raycasting, estados (ROOM / ZOOMING / PORTFOLIO).
+- `src/scene/room.js` — construcción del cuarto (paredes, suelo, ventana, silla).
+- `src/scene/props.js` — props del escritorio y la habitación (PC, taza, papeleras, estantería, cama, pósters).
+- `src/scene/door.js` — puerta de entrada y cartel de "Sobre mí".
+- `index.html` — overlay del 3D: butones de salida/vista rápida, transición, hint.
+- `public/portfolio.html` + `public/portfolio.css` — el "escritorio Ubuntu" embebido en un iframe.
+- `public/data/portfolio.json` — datos del currículum (ventanas, proyectos, educación…).
+- `public/icons/yaru/` — iconos del tema Ubuntu Yaru (ver abajo).
+- `public/textures/` — fondos, pósters y texturas de la escena.
+- `public/models/*.glb` — modelos 3D cargados por la escena.
+
+## Iconos
+
+Los iconos provienen del tema [Yaru](https://github.com/ubuntu/yaru) (CC BY-SA 4.0),
+adaptados y reducidos para este proyecto. Ver `public/icons/yaru/README.md`.
