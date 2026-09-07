@@ -525,6 +525,27 @@
     }
 
     @media (max-width: 600px) {
+      nav {
+        padding: 0.8rem 1.2rem;
+      }
+
+      .nav-left h1 {
+        font-size: 1.1rem;
+      }
+
+      .nav-actions {
+        gap: 0.6rem;
+      }
+
+      .btn {
+        padding: 0.6rem;
+        border-radius: 50%;
+      }
+
+      .btn span {
+        display: none;
+      }
+
       .bento-grid {
         grid-template-columns: 1fr;
       }
@@ -570,11 +591,11 @@
       <h1>Noe Machaca</h1>
     </div>
     <div class="nav-actions">
-      <a href="/" class="btn btn-outline"><i data-lucide="arrow-left"></i> Volver</a>
+      <a href="/" class="btn btn-outline" title="Volver"><i data-lucide="arrow-left"></i> <span>Volver</span></a>
       <!-- CV Download Button -->
-      <a href="/CV_Noe_Machaca.pdf" download="CV_Noe_Machaca.pdf" class="btn btn-primary">
+      <a href="/CV_Noe_Machaca.pdf" download="CV_Noe_Machaca.pdf" class="btn btn-primary" title="Descargar CV">
         <i data-lucide="download"></i>
-        Descargar CV
+        <span>Descargar CV</span>
       </a>
     </div>
   </nav>
