@@ -4,38 +4,58 @@
     "role": "Full-Stack Developer"
   },
   "_doc": {
-    "images": "Agrega capturas en public/projects/<slug>/ y referencia las rutas en detail.images (ej. /projects/crm-grupo-siena/1.png). Si images esta vacio se muestra el placeholder de gradiente."
+    "images": "Agrega capturas en public/projects/<slug>/ y referencia las rutas en detail.images (ej. /projects/crm-grupo-siena/1.png). Si images esta vacio se muestra el placeholder de gradiente.",
+    "cover": "Imagen de portada de la card del proyecto. Sube un archivo a public/projects/<slug>/ y pon su ruta en cover (ej. /projects/crm-grupo-siena/cover.png). Si cover esta vacio o no existe la imagen, se muestra el glyph."
   },
   "windows": [
     {
       "id": "about",
       "title": "Sobre Mí",
       "icon": "👤",
+      "iconSvg": "about",
       "type": "about",
       "z": 10
     },
     {
       "id": "projects",
-      "title": "Proyectos",
+      "title": "Experiencia",
       "icon": "📁",
+      "iconSvg": "projects",
       "type": "projects"
+    },
+    {
+      "id": "education",
+      "title": "Educación",
+      "icon": "🎓",
+      "iconSvg": "education",
+      "type": "education"
+    },
+    {
+      "id": "research",
+      "title": "Investigación",
+      "icon": "🔬",
+      "iconSvg": "research",
+      "type": "research"
     },
     {
       "id": "skills",
       "title": "Habilidades",
       "icon": "⚙️",
+      "iconSvg": "skills",
       "type": "skills"
     },
     {
-      "id": "hobbies",
-      "title": "Hobbies",
-      "icon": "🎮",
-      "type": "hobbies"
+      "id": "cv",
+      "title": "Currículum",
+      "icon": "📄",
+      "iconSvg": "cv",
+      "type": "cv"
     },
     {
       "id": "contact",
       "title": "Contacto",
       "icon": "✉️",
+      "iconSvg": "contact",
       "type": "contact"
     }
   ],
@@ -46,21 +66,41 @@
       "Tengo dominio en el ciclo completo del software: modelado de datos, arquitectura de APIs, interfaces interactivas y despliegue en contenedores. Además, soy investigador registrado en RENACYT (CONCYTEC) y coautor de diez obras de software con registro de propiedad intelectual."
     ],
     "stats": [
-      { "num": "2+", "label": "años de experiencia" },
-      { "num": "10", "label": "obras registradas" },
-      { "num": "RENACYT", "label": "investigador CONCYTEC" }
+      {
+        "num": "2+",
+        "label": "años de experiencia"
+      },
+      {
+        "num": "10",
+        "label": "obras registradas"
+      },
+      {
+        "num": "RENACYT",
+        "label": "investigador Nivel VII"
+      }
     ],
-    "primaryAction": { "label": "Ver mi trabajo", "window": "projects" },
-    "secondaryAction": { "label": "Hablemos →", "window": "contact" }
+    "primaryAction": {
+      "label": "Ver mi trabajo",
+      "window": "projects"
+    },
+    "secondaryAction": {
+      "label": "Hablemos →",
+      "window": "contact"
+    }
   },
   "projects": {
     "items": [
       {
-        "name": "CRM GRUPO SIENA",
+        "name": "GRUPO SIENA",
         "slug": "crm-grupo-siena",
         "description": "CRM integrado con la API oficial de WhatsApp Business y agente de IA para respuestas automáticas. Sincronización automática de citas con Google Workspace.",
-        "tags": ["React", "NestJS", "TypeScript"],
-        "gradient": "linear-gradient(135deg, #0f2027, #2c5364)",
+        "tags": [
+          "React",
+          "NestJS",
+          "TypeScript"
+        ],
+        "gradient": "linear-gradient(135deg, #ffffff, #03489b)",
+        "cover": "/projects/crm-grupo-siena/cover.png",
         "glyph": "🤝",
         "detail": {
           "role": "Full-Stack Developer",
@@ -74,16 +114,32 @@
             "Panel de métricas y seguimiento de conversaciones",
             "Multiusuario con perfiles de acceso"
           ],
-          "links": { "demo": "", "repo": "" },
-          "images": []
-        }
+          "links": {
+            "demo": "",
+            "repo": ""
+          },
+          "images": [
+            "/projects/crm-grupo-siena/login.png",
+            "/projects/crm-grupo-siena/pagina.png",
+            "/projects/crm-grupo-siena/crm.png",
+            "/projects/crm-grupo-siena/pipeline.png",
+            "/projects/crm-grupo-siena/banners.png"
+          ]
+        },
+        "glyphSvg": "building"
       },
       {
         "name": "Plataforma de Investigación",
         "slug": "plataforma-investigacion",
         "description": "SaaS para la gestión de semilleros y grupos de investigación (UNA Puno) para 300 usuarios. Autenticación, RBAC y motor de reportes en PDF y Excel.",
-        "tags": ["Next.js", "Supabase", "Django", "Docker"],
-        "gradient": "linear-gradient(135deg, #134e4a, #0f766e)",
+        "tags": [
+          "Next.js",
+          "Supabase",
+          "Django",
+          "Docker"
+        ],
+        "gradient": "linear-gradient(135deg, #ffffff, #0f766e)",
+        "cover": "/projects/plataforma-investigacion/cover.png",
         "glyph": "🔬",
         "detail": {
           "role": "Desarrollador Backend + Frontend",
@@ -97,16 +153,31 @@
             "Inscripción y seguimiento de integrantes",
             "Despliegue contenerizado con Docker"
           ],
-          "links": { "demo": "", "repo": "" },
-          "images": []
-        }
+          "links": {
+            "demo": "https://pgi.vriunap.pe/sign-in",
+            "repo": ""
+          },
+          "images": [
+            "/projects/plataforma-investigacion/login.png",
+            "/projects/plataforma-investigacion/semilleros.png",
+            "/projects/plataforma-investigacion/mis-semilleros.png",
+            "/projects/plataforma-investigacion/aprobado.png",
+            "/projects/plataforma-investigacion/subsanacion.png"
+          ]
+        },
+        "glyphSvg": "science"
       },
       {
-        "name": "RentalControl ERP",
+        "name": "RentalControl",
         "slug": "rentalcontrol-erp",
         "description": "ERP en producción para el arriendo de maquinaria. Módulos de facturación, despachos, devoluciones y conciliación financiera con firmas digitales.",
-        "tags": ["Ruby on Rails", "PostgreSQL", "Hotwire"],
-        "gradient": "linear-gradient(135deg, #7c2d12, #c2410c)",
+        "tags": [
+          "Ruby on Rails",
+          "PostgreSQL",
+          "Hotwire"
+        ],
+        "gradient": "linear-gradient(135deg, #ffffff, #b66543)",
+        "cover": "/projects/rentalcontrol-erp/cover.png",
         "glyph": "🏗️",
         "detail": {
           "role": "Desarrollador Full-Stack",
@@ -120,16 +191,29 @@
             "Reportes operativos por periodo",
             "Arquitectura modular con Hotwire"
           ],
-          "links": { "demo": "", "repo": "" },
-          "images": []
-        }
+          "links": {
+            "demo": "https://www.rentalcontrol.cl/",
+            "repo": ""
+          },
+          "images": [
+            "/projects/rentalcontrol-erp/login.png",
+            "/projects/rentalcontrol-erp/pagina.png"
+          ]
+        },
+        "glyphSvg": "engineering"
       },
       {
         "name": "Pandoo CL",
         "slug": "pandoo-cl",
         "description": "Form Builder dinámico drag-and-drop con generación de PDFs en AWS S3. Soporte para firmas digitales y gestión granular de permisos (RBAC).",
-        "tags": ["React", "Rails", "AWS S3"],
-        "gradient": "linear-gradient(135deg, #3b0764, #7c3aed)",
+        "tags": [
+          "React",
+          "Rails",
+          "AWS S3",
+          "React Query"
+        ],
+        "gradient": "linear-gradient(135deg, #ffffff, #ffffff)",
+        "cover": "/projects/pandoo-cl/cover.png",
         "glyph": "📝",
         "detail": {
           "role": "Desarrollador Full-Stack",
@@ -143,16 +227,31 @@
             "Gestión granular de permisos (RBAC)",
             "Editor visual de formularios en tiempo real"
           ],
-          "links": { "demo": "", "repo": "" },
-          "images": []
-        }
+          "links": {
+            "demo": "",
+            "repo": ""
+          },
+          "images": [
+            "/projects/pandoo-cl/login.png",
+            "/projects/pandoo-cl/home.png",
+            "/projects/pandoo-cl/form.png",
+            "/projects/pandoo-cl/my-forms.png",
+            "/projects/pandoo-cl/roles.png"
+          ]
+        },
+        "glyphSvg": "document"
       },
       {
         "name": "Endogastro Puno",
         "slug": "endogastro-puno",
         "description": "Ecosistema de salud digital (Web + Móvil iOS/Android). Historia clínica, farmacia, y autogestión de citas con pagos integrados vía Culqi.",
-        "tags": ["React Native", "Node.js", "Firebase"],
-        "gradient": "linear-gradient(135deg, #164e63, #0e7490)",
+        "tags": [
+          "React Native",
+          "Node.js",
+          "Firebase"
+        ],
+        "gradient": "linear-gradient(135deg, #ffffff, #b4c26a)",
+        "cover": "/projects/endogastro-puno/cover.png",
         "glyph": "🏥",
         "detail": {
           "role": "Desarrollador Full-Stack (Web + Móvil)",
@@ -166,9 +265,19 @@
             "App móvil iOS y Android con React Native",
             "Panel web de administración"
           ],
-          "links": { "demo": "", "repo": "" },
-          "images": []
-        }
+          "links": {
+            "demo": "https://endogastro.com.pe/",
+            "repo": ""
+          },
+          "images": [
+            "/projects/endogastro-puno/login.png",
+            "/projects/endogastro-puno/landing.png",
+            "/projects/endogastro-puno/android.png",
+            "/projects/endogastro-puno/ios.png",
+            "/projects/endogastro-puno/usuario.png"
+          ]
+        },
+        "glyphSvg": "mobile"
       }
     ],
     "cta": {
@@ -177,24 +286,122 @@
       "window": "contact"
     }
   },
-  "skills": [
-    "Ruby on Rails",
-    "Node.js / NestJS",
-    "React / Next.js",
-    "React Native",
-    "TypeScript / JavaScript",
-    "Django / Python",
-    "PostgreSQL / MySQL",
-    "Supabase / Firebase",
-    "Docker",
-    "AWS S3",
-    "Git",
-    "Hotwire / Stimulus"
+  "education": [
+    {
+      "title": "Ingeniería Estadística e Informática (Egresado)",
+      "institution": "Universidad Nacional del Altiplano",
+      "date": "Agosto 2021 – Agosto 2026",
+      "location": "Puno, Perú",
+      "icon": "🎓",
+      "field": "Ciencias e Informática",
+      "iconSvg": "book"
+    },
+    {
+      "title": "Formación en desarrollo backend con Java y Spring Boot",
+      "institution": "Programa Oracle Next Education (ONE)",
+      "date": "Julio 2024 – Julio 2025",
+      "location": "Selección competitiva, LATAM",
+      "icon": "☕",
+      "field": "Desarrollo Backend",
+      "iconSvg": "terminal"
+    },
+    {
+      "title": "Programa intensivo en IA y Machine Learning",
+      "institution": "Summer Camp de Inteligencia Artificial — PUCP",
+      "date": "Enero 2026",
+      "location": "Proyecto grupal: RIKUY IA",
+      "icon": "🤖",
+      "field": "Inteligencia Artificial",
+      "iconSvg": "science"
+    }
   ],
-  "hobbies": [
-    { "icon": "🎮", "title": "Videojuegos", "description": "Estrategia y RPGs." },
-    { "icon": "🎸", "title": "Música", "description": "Toco la guitarra." },
-    { "icon": "📚", "title": "Lectura", "description": "Ciencia ficción." }
+  "research": {
+    "heading": "Investigación y Propiedad Intelectual",
+    "description": "Como desarrollador e investigador registrado en RENACYT (Nivel VII, CONCYTEC), he participado en diversos proyectos de innovación tecnológica en el Instituto de Investigación de la UNA Puno.",
+    "badge": {
+      "label": "RENACYT · CONCYTEC",
+      "sub": "Investigador Nivel VII"
+    },
+    "stats": [
+      {
+        "num": "10",
+        "label": "obras de software registradas"
+      },
+      {
+        "num": "Nivel VII",
+        "label": "investigador RENACYT"
+      },
+      {
+        "num": "IA - ML",
+        "label": "diagnóstico asistido"
+      }
+    ],
+    "items": [
+      {
+        "title": "Obras de Software en INDECOPI",
+        "description": "Coautor como desarrollador de diez obras de software registradas en áreas de salud, medio ambiente e ingeniería — incluyendo sistemas de diagnóstico asistido por ML e IA (cirrosis hepática, enfermedades dentales).",
+        "icon": "💾",
+        "tags": [
+          "INDECOPI",
+          "Propiedad Intelectual",
+          "Machine Learning",
+          "Inteligencia artificial"
+        ],
+        "iconSvg": "floppy"
+      }
+    ],
+    "iconSvg": "science"
+  },
+  "cv": {
+    "heading": "Mi Currículum Vitae",
+    "url": "/CV_Noe_Machaca.pdf"
+  },
+  "skills": [
+    {
+      "category": "Backend",
+      "items": [
+        "Ruby on Rails",
+        "Node.js / NestJS",
+        "Django / Python",
+        "Spring Boot"
+      ]
+    },
+    {
+      "category": "Frontend",
+      "items": [
+        "React / Next.js",
+        "React Native",
+        "TypeScript / JavaScript",
+        "Hotwire / Stimulus"
+      ]
+    },
+    {
+      "category": "Bases de datos",
+      "items": [
+        "PostgreSQL",
+        "MySQL",
+        "Supabase",
+        "Firebase"
+      ]
+    },
+    {
+      "category": "Cloud e infraestructura",
+      "items": [
+        "AWS S3",
+        "Docker",
+        "Git",
+        "API Gateway",
+        "Cloudflare"
+      ]
+    },
+    {
+      "category": "Integraciones",
+      "items": [
+        "Google Workspace API",
+        "WhatsApp Business API",
+        "Culqi"
+      ]
+    }
   ],
   "contact": {
     "heading": "Hablemos",
@@ -202,8 +409,14 @@
     "email": "noe.u.machaca@gmail.com",
     "phone": "+51 965 100 861",
     "links": [
-      { "label": "GitHub", "url": "https://github.com/newneo4" },
-      { "label": "LinkedIn", "url": "https://linkedin.com/in/noe-u-machaca" }
+      {
+        "label": "GitHub",
+        "url": "https://github.com/newneo4"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/in/noe-u-machaca"
+      }
     ]
   }
 }

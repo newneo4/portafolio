@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noé Ulises Machaca - Quick View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" href="/logo.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg: #030305;
+      --surface: rgba(25, 25, 32, 0.4);
+      --glass: rgba(14, 14, 22, 0.6);
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #e95420;
+      --primary-glow: rgba(233, 84, 32, 0.4);
+      --text: #f0f0f0;
+      --text-muted: #a0a0a0;
+      --light-bg: #f8f9fa;
+      /* Para contraste de logos */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(233, 84, 32, 0.08), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(147, 51, 234, 0.08), transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* Navbar */
+    nav {
+      position: sticky;
+      top: 0;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .nav-logo {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .nav-left h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 99px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: #ff6a38;
+      box-shadow: 0 0 25px var(--primary-glow);
+    }
+
+    /* Bento Grid Layout */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 4rem 1.5rem;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: minmax(180px, auto);
+      gap: 1.5rem;
+    }
+
+    /* Bento Box Styles */
+    .bento-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bento-interactive:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+    }
+
+    /* Section Titles */
+    .box-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+
+    .box-title i {
+      color: var(--primary);
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── 1. Profile ── */
+    .box-profile {
+      grid-column: span 2;
+      grid-row: span 2;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(233, 84, 32, 0.1), rgba(147, 51, 234, 0.05));
+    }
+
+    .box-profile h2 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .box-profile h3 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .box-profile p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .stat {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      flex: 1;
+    }
+
+    .stat-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      margin-top: 0.2rem;
+    }
+
+    /* ── 2. Skills ── */
+    .box-skills {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .skills-marquee {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .skill-tag {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.4rem 0.8rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      color: #e0e0e0;
+      transition: background 0.2s;
+    }
+
+    .skill-tag:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ── 3. Education & Research ── */
+    .box-edu {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .box-research {
+      grid-column: span 1;
+      grid-row: span 1;
+      background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), transparent);
+    }
+
+    .timeline-item {
+      margin-bottom: 1rem;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-item h4 {
+      font-size: 0.95rem;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .timeline-item p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .badge-highlight {
+      display: inline-block;
+      background: rgba(13, 110, 253, 0.2);
+      color: #70b0ff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── 4. Projects ── */
+    .box-project {
+      grid-column: span 1;
+      grid-row: span 2;
+      padding: 0;
+    }
+
+    .project-cover {
+      width: 100%;
+      height: 150px;
+      background-color: var(--light-bg);
+      /* Fondo claro para contraste de logos PNG */
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-origin: content-box;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .project-icon {
+      position: absolute;
+      bottom: -16px;
+      left: 1.5rem;
+      background: var(--bg);
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .project-icon i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .project-info {
+      padding: 1.8rem 1.5rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-info h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .project-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .ptag {
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: #ccc;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ── Modals ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: rgba(20, 20, 25, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.95) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-close i {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* El header del modal también tiene fondo claro para los logos transparentes */
+    .modal-header-img {
+      width: 100%;
+      height: 250px;
+      background-color: var(--light-bg);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-origin: content-box;
+      padding: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-body {
+      padding: 2.5rem;
+    }
+
+    .modal-title {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .modal-subtitle {
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-desc {
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-features {
+      margin-bottom: 2rem;
+    }
+
+    .modal-features li {
+      margin-bottom: 0.5rem;
+      color: #ccc;
+      margin-left: 1.5rem;
+    }
+
+    .modal-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-gallery img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      aspect-ratio: 16/9;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .box-profile {
+        grid-column: span 2;
+      }
+
+      .box-skills {
+        grid-column: span 2;
+      }
+
+      .box-edu {
+        grid-column: span 1;
+      }
+
+      .box-research {
+        grid-column: span 1;
+      }
+
+      .box-project {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .box-profile,
+      .box-skills,
+      .box-edu,
+      .box-research,
+      .box-project {
+        grid-column: span 1;
+      }
+
+      .stats-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <h1>Noe Machaca</h1>
+    </div>
+    <div class="nav-actions">
+      <a href="/" class="btn btn-outline"><i data-lucide="arrow-left"></i> Volver</a>
+      <!-- CV Download Button -->
+      <a href="/CV_Noe_Machaca.pdf" download="CV_Noe_Machaca.pdf" class="btn btn-primary">
+        <i data-lucide="download"></i>
+        Descargar CV
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="bento-grid" id="bento-grid">
+      <!-- Injected by JS -->
+      <div class="bento-box" style="grid-column: span 4; text-align: center;">
+        <h2 style="font-size: 1.5rem; margin-top: 2rem;">Cargando perfil...</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content" id="modal-content">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <script>
+    // Map JSON iconSvg names to Lucide icon names
+    const iconMap = {
+      'science': 'flask-conical',
+      'engineering': 'hard-hat',
+      'document': 'file-text',
+      'book': 'book-open',
+      'terminal': 'terminal',
+      'floppy': 'save',
+      'building': 'building-2',
+      'user': 'user',
+      'folder': 'folder',
+      'graduation-cap': 'graduation-cap',
+      'cpu': 'cpu',
+      'mail': 'mail',
+      'mobile': 'heart-pulse'
+    };
+
+    function getLucideIcon(name) {
+      return iconMap[name] || 'circle';
+    }
+
+    let portfolioData = null;
+    const gridEl = document.getElementById('bento-grid');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modal-content');
+
+    async function init() {
+      try {
+        const res = await fetch('/data/portfolio.json');
+        portfolioData = await res.json();
+        renderBento();
+        // Initialize Lucide Icons after rendering DOM
+        lucide.createIcons();
+      } catch (err) {
+        console.error("Error cargando JSON:", err);
+        gridEl.innerHTML = `<div class="bento-box" style="grid-column:span 4"><h2>Error al cargar datos</h2></div>`;
+      }
+    }
+
+    function renderBento() {
+      const { about, projects, skills, education, research } = portfolioData;
+      let html = '';
+
+      // ── 1. Profile Box ──
+      const statsHtml = about.stats.map(s => `
+        <div class="stat">
+          <div class="stat-num">${s.num}</div>
+          <div class="stat-label">${s.label}</div>
+        </div>
+      `).join('');
+
+      html += `
+        <div class="bento-box box-profile">
+          <h3>${portfolioData.meta.role}</h3>
+          <h2>${about.heading}</h2>
+          <p>${about.paragraphs[0]}</p>
+          <div class="stats-row">${statsHtml}</div>
+        </div>
+      `;
+
+      // ── 2. Skills Box ──
+      let allSkills = [];
+      if (Array.isArray(skills)) {
+        skills.forEach(cat => {
+          if (cat.items && Array.isArray(cat.items)) {
+            allSkills.push(...cat.items);
+          }
+        });
+      }
+
+      const skillsHtml = allSkills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+
+      html += `
+        <div class="bento-box box-skills">
+          <div class="box-title"><i data-lucide="cpu"></i> Tecnologías Core</div>
+          <div class="skills-marquee">${skillsHtml}</div>
+        </div>
+      `;
+
+      // ── 3. Research & Credentials Box ──
+      if (research) {
+        const rItems = research.items.slice(0, 1).map(item => `
+          <div class="timeline-item">
+            <h4>${item.title}</h4>
+            <p>${item.description}</p>
+          </div>
+        `).join('');
+
+        html += `
+          <div class="bento-box box-research">
+            <div class="box-title"><i data-lucide="microscope"></i> Investigación</div>
+            <div class="badge-highlight">${research.badge.label} • ${research.badge.sub}</div>
+            ${rItems}
+          </div>
+        `;
+      }
+
+      // ── 4. Education Box ──
+      if (education && education.length > 0) {
+        const eItems = education.slice(0, 2).map(item => `
+          <div class="timeline-item">
+            <h4>${item.title}</h4>
+            <p>${item.institution} • ${item.date}</p>
+          </div>
+        `).join('');
+
+        html += `
+          <div class="bento-box box-edu">
+            <div class="box-title"><i data-lucide="graduation-cap"></i> Educación</div>
+            ${eItems}
+          </div>
+        `;
+      }
+
+      // ── 5. Projects Boxes ──
+      if (projects && projects.items) {
+        projects.items.forEach((p, index) => {
+          const coverStyle = p.cover ? `background-image: url('${p.cover}');` : `background: ${p.gradient || '#333'};`;
+          const iconName = getLucideIcon(p.glyphSvg);
+
+          html += `
+            <div class="bento-box box-project bento-interactive" onclick="openProject(${index})">
+              <div class="project-cover" style="${coverStyle}">
+                <div class="project-icon"><i data-lucide="${iconName}"></i></div>
+              </div>
+              <div class="project-info">
+                <h4>${p.name}</h4>
+                <p>${p.description}</p>
+                <div class="project-tags">
+                  ${p.tags.slice(0, 3).map(t => `<span class="ptag">${t}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      gridEl.innerHTML = html;
+    }
+
+    window.openProject = function (index) {
+      const p = portfolioData.projects.items[index];
+      const d = p.detail;
+      const coverStyle = p.cover ? `background-image: url('${p.cover}');` : `background: ${p.gradient || '#333'};`;
+      const iconName = getLucideIcon(p.glyphSvg);
+
+      let featuresHtml = '';
+      if (d.features && d.features.length > 0) {
+        featuresHtml = `
+          <h4>Características Clave</h4>
+          <ul class="modal-features">
+            ${d.features.map(f => `<li>${f}</li>`).join('')}
+          </ul>
+        `;
+      }
+
+      let galleryHtml = '';
+      if (d.images && d.images.length > 0) {
+        galleryHtml = `
+          <h4>Galería</h4>
+          <div class="modal-gallery">
+            ${d.images.map(img => `<img src="${img}" alt="Captura" loading="lazy">`).join('')}
+          </div>
+        `;
+      }
+
+      modalContent.innerHTML = `
+        <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+        <div class="modal-header-img" style="${coverStyle}"></div>
+        <div class="modal-body">
+          <h2 class="modal-title"><i data-lucide="${iconName}" style="width:28px;height:28px;color:var(--primary);"></i> ${p.name}</h2>
+          <div class="modal-subtitle">${d.role} • ${d.client} (${d.year})</div>
+          
+          <div class="project-tags" style="margin-bottom: 1.5rem;">
+            ${p.tags.map(t => `<span class="ptag" style="font-size:0.8rem;">${t}</span>`).join('')}
+          </div>
+
+          <p class="modal-desc">${d.description}</p>
+          
+          ${featuresHtml}
+          ${galleryHtml}
+        </div>
+      `;
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Re-initialize icons inside modal
+      lucide.createIcons();
+    }
+
+    window.closeModal = function () {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        if (!modal.classList.contains('active')) modalContent.innerHTML = '';
+      }, 300);
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    init();
+  </script>
+</body>
+
+</html>

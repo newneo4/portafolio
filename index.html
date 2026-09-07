@@ -107,6 +107,14 @@
       opacity: 1;
     }
 
+    #hint .hint-icon {
+      width: 22px;
+      height: 22px;
+      margin-right: 6px;
+      vertical-align: -4px;
+      filter: brightness(0) invert(1);
+    }
+
     /* ── Crosshair (in ROOM state) ── */
     #crosshair {
       position: absolute;
@@ -168,8 +176,9 @@
     /* ── Exit button ── */
     #exit-btn {
       position: absolute;
-      top: 3.2rem;
-      left: 1.5rem;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 110;
       display: none;
       align-items: center;
@@ -191,11 +200,46 @@
     #exit-btn:hover {
       background: rgba(233, 84, 32, 0.25);
       color: #fff;
-      transform: translateY(-2px);
+      transform: translate(-50%, -2px);
     }
 
     #exit-btn.visible {
       display: flex;
+    }
+
+    /* ── Quick View Button ── */
+    #quick-view-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 110;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(14, 14, 22, 0.85);
+      color: #ffd9a0;
+      border: 1px solid rgba(233, 84, 32, 0.6);
+      padding: 0.65rem 1.2rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+      transition: background 0.2s, color 0.2s, transform 0.2s, opacity 0.3s;
+      text-decoration: none;
+    }
+
+    #quick-view-btn:hover {
+      background: rgba(233, 84, 32, 0.25);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    #quick-view-btn.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
 
     /* ── Transition screen ── */
@@ -272,6 +316,25 @@
       max-width: 300px;
     }
 
+    #rotate-overlay .overlay-btn {
+      margin-top: 2rem;
+      display: inline-block;
+      background: rgba(233, 84, 32, 0.15);
+      color: #ffd9a0;
+      border: 1px solid rgba(233, 84, 32, 0.5);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    #rotate-overlay .overlay-btn:hover {
+      background: rgba(233, 84, 32, 0.35);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+
     @keyframes rotate-phone {
       0% {
         transform: rotate(0deg);
@@ -309,9 +372,10 @@
 <body>
   <!-- Overlay para forzar modo horizontal en móviles -->
   <div id="rotate-overlay" role="alert" aria-live="assertive">
-    <div class="icon" aria-hidden="true">📱</div>
+    <div class="icon" aria-hidden="true"><img src="/icons/yaru/mobile.svg" alt="" width="72" height="72"></div>
     <h2>Modo Vertical No Soportado</h2>
-    <p>Para disfrutar de esta experiencia 3D inmersiva, por favor gira tu dispositivo horizontalmente.</p>
+    <p>Por favor cambia a modo horizontal</p>
+    <a href="/quick_view.html" class="overlay-btn">⚡ Ir a Vista Rápida</a>
   </div>
 
   <div id="loader" aria-live="polite">
@@ -329,6 +393,7 @@
     <iframe src="/portfolio.html" id="portfolio-frame" title="Portfolio" allow="autoplay"></iframe>
   </div>
   <button id="exit-btn">← Volver al cuarto</button>
+  <a href="/quick_view.html" id="quick-view-btn">⚡ Vista Rápida</a>
 
   <script type="module" src="/src/main.js"></script>
 </body>

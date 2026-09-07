@@ -42,12 +42,16 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.topbar-left,
 .topbar-right,
 .topbar-center {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.topbar-center {
+  flex: 1;
+  justify-content: center;
 }
 
 .topbar-item {
@@ -58,6 +62,106 @@ body {
 
 .topbar-item:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── YARU UI ICONS ── */
+.ui-icon {
+  display: inline-block;
+  vertical-align: middle;
+  user-select: none;
+  pointer-events: none;
+  object-fit: contain;
+}
+
+/* Dock: app icons full color (PNG).
+   NOTA: la clase es .dock-img (no .dock) para evitar que la regla
+   de la barra .dock (position:absolute; top:27px) impacte al <img>. */
+.dock .ui-icon.dock-img {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.2s;
+}
+.dock-icon:hover .ui-icon.dock-img {
+  transform: scale(1.12);
+}
+.dock .icon-fb {
+  font-size: 1.5rem;
+}
+
+/* Window title icon */
+.ui-icon.win-title-icon {
+  width: 15px;
+  height: 15px;
+  margin-right: 6px;
+}
+
+/* Education timeline */
+.ui-icon.edu {
+  width: 18px;
+  height: 18px;
+}
+
+.ui-icon.location {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+}
+
+/* Research */
+.ui-icon.research-badge {
+  width: 22px;
+  height: 22px;
+}
+.ui-icon.research {
+  width: 24px;
+  height: 24px;
+}
+
+/* Contact / detail actions */
+.ui-icon.call {
+  width: 15px;
+  height: 15px;
+  margin-right: 3px;
+}
+.ui-icon.detail {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  vertical-align: -2px;
+}
+
+/* Card / slide glyph placeholders */
+.ui-icon.glyph {
+  width: 58px;
+  height: 58px;
+  opacity: 0.9;
+}
+.ui-icon.slide-glyph {
+  width: 84px;
+  height: 84px;
+}
+
+/* Empty / error state */
+.ui-icon.empty {
+  width: 42px;
+  height: 42px;
+}
+
+/* Symbolic icons on dark surfaces → white glyph */
+.ui-icon.edu,
+.ui-icon.location,
+.ui-icon.research-badge,
+.ui-icon.research,
+.ui-icon.detail,
+.ui-icon.call,
+.ui-icon.empty {
+  filter: brightness(0) invert(1);
+}
+
+/* Emoji fallback span (same visual weight as the icons) */
+.icon-fb {
+  display: inline-block;
+  line-height: 1;
 }
 
 /* ── DOCK (Left Panel) ── */
@@ -273,7 +377,7 @@ p {
 .card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: scale-down;
   transition: transform 0.3s;
 }
 
@@ -302,15 +406,11 @@ p {
   font-size: 2.6rem;
   filter: grayscale(0.2);
   opacity: 0.9;
+  transition: transform 0.3s;
 }
 
 .card:hover .card-glyph {
   transform: scale(1.08);
-}
-
-.card-glyph {
-  transition: transform 0.3s;
-  filter: grayscale(0.2);
 }
 
 /* About stats */
@@ -682,37 +782,6 @@ p {
   color: #fff;
 }
 
-/* Activities dropdown menu */
-.activities-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: rgba(20, 20, 20, 0.95);
-  border: 1px solid #333;
-  border-radius: 6px;
-  min-width: 170px;
-  padding: 6px;
-  display: none;
-  z-index: 10000;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-}
-
-.activities-menu.open {
-  display: block;
-}
-
-.menu-item {
-  padding: 9px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.menu-item:hover {
-  background: rgba(233, 84, 32, 0.25);
-  color: #fff;
-}
-
 /* Empty desktop helper */
 .empty-desktop {
   position: absolute;
@@ -784,6 +853,275 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ── EDUCATION TIMELINE ── */
+.edu-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-left: 34px;
+}
+
+.edu-timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--ubuntu-orange), rgba(233, 84, 32, 0.15));
+  border-radius: 2px;
+}
+
+.edu-item {
+  position: relative;
+}
+
+.edu-track {
+  position: absolute;
+  left: -34px;
+  top: 4px;
+  width: 34px;
+  display: flex;
+  justify-content: center;
+}
+
+.edu-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2b2b2b, #1a1a1a);
+  border: 2px solid var(--ubuntu-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  box-shadow: 0 0 0 4px rgba(233, 84, 32, 0.12), 0 4px 10px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.edu-card {
+  padding: 16px 18px;
+  background: linear-gradient(160deg, var(--window-header), #232323);
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.edu-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(233, 84, 32, 0.6);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.edu-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.edu-field {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ubuntu-orange);
+  background: rgba(233, 84, 32, 0.14);
+  border: 1px solid rgba(233, 84, 32, 0.35);
+  border-radius: 999px;
+  padding: 3px 12px;
+}
+
+.edu-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 999px;
+  padding: 3px 12px;
+  white-space: nowrap;
+}
+
+.edu-title {
+  margin: 0 0 6px 0;
+  font-size: 1.08rem;
+  color: var(--text-main);
+}
+
+.edu-institution {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ubuntu-orange);
+}
+
+.edu-meta {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* ── RESEARCH SECTION ── */
+.research-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 22px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 160% at 0% 0%, rgba(233, 84, 32, 0.18), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(160deg, #242424, #1a1a1a);
+  border: 1px solid #3a3a3a;
+  margin-bottom: 22px;
+}
+
+.research-badge {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2px;
+  background: linear-gradient(135deg, rgba(233, 84, 32, 0.25), rgba(233, 84, 32, 0.08));
+  border: 1.5px solid rgba(233, 84, 32, 0.6);
+  box-shadow: 0 0 24px rgba(233, 84, 32, 0.25);
+  padding: 6px;
+}
+
+.research-badge h3 {
+  margin: 0;
+  font-size: 0.54rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ubuntu-orange);
+  line-height: 1.3;
+}
+
+.research-badge p {
+  margin: 0;
+  font-size: 0.56rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.research-badge-icon {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+.research-heading {
+  margin: 0 0 6px 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.research-hero-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.research-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.research-stat {
+  flex: 1;
+  min-width: 150px;
+  padding: 14px 16px;
+  text-align: center;
+  background: linear-gradient(160deg, var(--window-header), #232323);
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.research-stat:hover {
+  transform: translateY(-3px);
+  border-color: rgba(233, 84, 32, 0.6);
+}
+
+.research-stat-num {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ubuntu-orange);
+}
+
+.research-stat-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.research-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.research-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  background: linear-gradient(160deg, var(--window-header), #222);
+  border-radius: 12px;
+  border: 1px solid #3a3a3a;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.research-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(233, 84, 32, 0.6);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.research-card-icon {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: rgba(233, 84, 32, 0.15);
+  border: 1px solid rgba(233, 84, 32, 0.35);
+}
+
+.research-card-body h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.05rem;
+  color: var(--ubuntu-orange);
+}
+
+.research-card-body p {
+  margin: 0 0 10px 0;
+  font-size: 0.88rem;
+  color: #bbb;
+}
+
+.research-tag {
+  background: rgba(233, 84, 32, 0.18);
+  color: #e9a68b;
+  border: 1px solid rgba(233, 84, 32, 0.3);
+}
+
 /* ── RESPONSIVE MOBILE LANDSCAPE ── */
 @media screen and (max-width: 950px),
 screen and (max-height: 650px) {
@@ -810,6 +1148,21 @@ screen and (max-height: 650px) {
   .window-controls {
     pointer-events: all;
     /* Asegurar que los botones sigan siendo clicables */
+  }
+
+  .research-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .edu-card-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .edu-date {
+    white-space: normal;
   }
 }
 

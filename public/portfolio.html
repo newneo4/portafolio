@@ -15,27 +15,17 @@
 
   <!-- Top Bar -->
   <div class="topbar">
-    <div class="topbar-left">
-      <span class="topbar-item" id="btn-activities" style="position:relative;" onclick="toggleActivities(event)">Actividades ▾</span>
-      <div class="activities-menu" id="activities-menu" role="menu" aria-label="Actividades"></div>
-    </div>
     <div class="topbar-center">
       <span class="topbar-item" id="clock">..:..</span>
     </div>
     <div class="topbar-right">
       <span class="topbar-item">🔋</span>
       <span class="topbar-item">📶</span>
-      <span class="topbar-item" id="btn-sound" style="cursor:pointer;" title="Silenciar/Reproducir" role="button" aria-label="Silenciar o reproducir música">🔊</span>
-      <span class="topbar-item">▼</span>
+      <span class="topbar-item" id="btn-sound" style="cursor:pointer;" title="Silenciar/Reproducir" role="button"
+        aria-label="Silenciar o reproducir música">🔇</span>
     </div>
   </div>
 
-  <!-- Empty desktop helper -->
-  <div class="empty-desktop" id="empty-desktop">
-    <span class="empty-icon">🖥️</span>
-    <p>Escritorio vacío</p>
-    <p class="empty-sub">Usa el dock o el menú Actividades para explorar.</p>
-  </div>
 
   <!-- Dock (Left) -->
   <div class="dock" id="dock"></div>
@@ -53,14 +43,9 @@
     const bgMusic = document.getElementById('bg-music');
     const btnSound = document.getElementById('btn-sound');
 
-    // Autoplay when the frame loads (works because user interacted with 3D scene)
-    window.addEventListener('DOMContentLoaded', () => {
-      bgMusic.volume = 0.2; // Empezar suave, el usuario ajusta con el botón
-      bgMusic.play().catch(() => {
-        // En caso de que el navegador bloquee el autoplay de todos modos
-        btnSound.textContent = '🔇';
-      });
-    });
+    // La música inicia APAGADA por defecto. El usuario la enciende con el botón.
+    bgMusic.volume = 0.2;
+    btnSound.textContent = '🔇';
 
     btnSound.addEventListener('click', () => {
       if (bgMusic.paused) {
@@ -108,18 +93,12 @@
       updateEmptyDesktop();
     }
 
-    function toggleActivities(e) {
-      e.stopPropagation();
-      document.getElementById('activities-menu').classList.toggle('open');
-    }
-
-    document.addEventListener('click', () => {
-      document.getElementById('activities-menu').classList.remove('open');
-    });
-
     function updateEmptyDesktop() {
       const anyOpen = document.querySelectorAll('.os-window.open').length > 0;
-      document.getElementById('empty-desktop').classList.toggle('show', !anyOpen);
+      const emptyDesktopEl = document.getElementById('empty-desktop');
+      if (emptyDesktopEl) {
+        emptyDesktopEl.classList.toggle('show', !anyOpen);
+      }
     }
 
     function focusWindow(winId) {
@@ -181,10 +160,24 @@
       ));
     }
 
+    // Renders a Yaru icon as an <img>. Si la carga falla (onerror) muestra el emoji como fallback.
+    function iconImg(svgName, emojiFallback, cls, alt, ext) {
+      const fallback = `<span class="icon-fb">${escapeHtml(emojiFallback || '')}</span>`;
+      const fbJson = encodeURIComponent(fallback);
+      if (svgName) {
+        return `<img src="/icons/yaru/${escapeHtml(svgName)}.${ext || 'svg'}" class="ui-icon ${cls || ''}" alt="${escapeHtml(alt || '')}"
+          loading="lazy" onerror="this.outerHTML=decodeURIComponent('${fbJson}')">`;
+      }
+      return fallback;
+    }
+
     function windowHeader(win) {
+      const titleIcon = win.iconSvg
+        ? `<img src="/icons/yaru/${escapeHtml(win.iconSvg)}.png" class="ui-icon win-title-icon" alt="" onerror="this.remove()">`
+        : '';
       return `
         <div class="window-header" onmousedown="startDrag(event, 'win-${win.id}')">
-          <div class="window-title">${escapeHtml(win.title)}</div>
+          <div class="window-title">${titleIcon}${escapeHtml(win.title)}</div>
           <div class="window-controls">
             <button class="control-btn minimize" onclick="closeWindow('${win.id}')" aria-label="Minimizar">_</button>
             <button class="control-btn maximize" aria-label="Maximizar">□</button>
@@ -201,7 +194,7 @@
         ${a.paragraphs.map(p => `<p>${escapeHtml(p)}</p>`).join('')}
         <div class="about-stats">${stats}</div>
         <div class="about-actions">
-          <button class="card" style="cursor:pointer;" onclick="openWindow('${a.primaryAction.window}')">${escapeHtml(a.primaryAction.label)}</button>
+          <button class="card" style="color: white; cursor:pointer;" onclick="openWindow('${a.primaryAction.window}')">${escapeHtml(a.primaryAction.label)}</button>
           <button class="card cta-contact" style="cursor:pointer;" onclick="openWindow('${a.secondaryAction.window}')">${escapeHtml(a.secondaryAction.label)}</button>
         </div>`;
     }
@@ -212,7 +205,10 @@
              data-slug="${escapeHtml(pr.slug)}"
              aria-label="Ver detalles de ${escapeHtml(pr.name)}">
           <div class="card-image" style="background: ${pr.gradient};">
-            <span class="card-glyph">${escapeHtml(pr.glyph)}</span>
+            ${pr.cover
+          ? `<img class="card-cover" src="${escapeHtml(pr.cover)}" alt="${escapeHtml(pr.name)}" loading="lazy" onerror="window.__coverFail(this, '${escapeHtml(pr.slug)}')">`
+          : (pr.glyphSvg ? iconImg(pr.glyphSvg, escapeHtml(pr.glyph), 'glyph') : `<span class="card-glyph">${escapeHtml(pr.glyph)}</span>`)
+        }
             <span class="card-open-hint">↗</span>
           </div>
           <div class="card-content">
@@ -233,17 +229,87 @@
     }
 
     function skillsContent(skills) {
-      return `<div class="skills-section">${skills.map(s => `<div class="skill-tag">${escapeHtml(s)}</div>`).join('')}</div>`;
+      return `<div class="skills-categories">${skills.map(cat => `
+        <div class="skill-category" style="margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 0.5rem; color: var(--ubuntu-orange); font-size: 1.1rem;">${escapeHtml(cat.category)}</h3>
+          <div class="skills-section">
+            ${cat.items.map(s => `<div class="skill-tag">${escapeHtml(s)}</div>`).join('')}
+          </div>
+        </div>`).join('')}</div>`;
     }
 
-    function hobbiesContent(hobbies) {
-      const cards = hobbies.map(h => `
-        <div class="card" style="text-align: center;">
-          <span style="font-size:2rem; display:block; margin-bottom:10px;">${escapeHtml(h.icon)}</span>
-          <h3>${escapeHtml(h.title)}</h3>
-          <p>${escapeHtml(h.description)}</p>
+    function educationContent(education) {
+      return `<div class="edu-timeline">
+        ${education.map((ed, i) => `
+          <div class="edu-item ${i === education.length - 1 ? 'edu-item-last' : ''}">
+            <div class="edu-track">
+              <div class="edu-dot">${ed.iconSvg ? iconImg(ed.iconSvg, escapeHtml(ed.icon || '🎓'), 'edu') : escapeHtml(ed.icon || '🎓')}</div>
+            </div>
+            <div class="edu-card card" style="cursor: default;">
+              <div class="edu-card-top">
+                <span class="edu-field">${escapeHtml(ed.field || '')}</span>
+                <span class="edu-date">${escapeHtml(ed.date)}</span>
+              </div>
+              <h3 class="edu-title">${escapeHtml(ed.title)}</h3>
+              <p class="edu-institution">${escapeHtml(ed.institution)}</p>
+              <p class="edu-meta">${iconImg('location', escapeHtml('📍'), 'location')} ${escapeHtml(ed.location)}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    function researchContent(research) {
+      const badge = research.badge ? `
+        <div class="research-badge">
+          <span class="research-badge-icon">${iconImg('science', escapeHtml('⚛️'), 'research-badge')}</span>
+          <div>
+            <h3>${escapeHtml(research.badge.label)}</h3>
+            <p>${escapeHtml(research.badge.sub)}</p>
+          </div>
+        </div>` : '';
+
+      const stats = (research.stats && research.stats.length) ? `
+        <div class="research-stats">
+          ${research.stats.map(s => `
+            <div class="research-stat">
+              <span class="research-stat-num">${escapeHtml(s.num)}</span>
+              <span class="research-stat-label">${escapeHtml(s.label)}</span>
+            </div>
+          `).join('')}
+        </div>` : '';
+
+      const items = research.items.map(item => `
+        <div class="research-card card" style="cursor: default;">
+          <div class="research-card-icon">${item.iconSvg ? iconImg(item.iconSvg, escapeHtml(item.icon || '📄'), 'research') : escapeHtml(item.icon || '📄')}</div>
+          <div class="research-card-body">
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            ${item.tags && item.tags.length ? `<div class="card-tags">${item.tags.map(t => `<span class="card-tag research-tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+          </div>
         </div>`).join('');
-      return `<div class="grid-layout">${cards}</div>`;
+
+      return `<div class="research-section">
+        <div class="research-hero">
+          ${badge}
+          <div class="research-hero-text">
+            <h2 class="research-heading">${escapeHtml(research.heading)}</h2>
+            <p>${escapeHtml(research.description)}</p>
+          </div>
+        </div>
+        ${stats}
+        <div class="research-items">${items}</div>
+      </div>`;
+    }
+
+    function cvContent(cv) {
+      return `<div class="cv-section" style="height: 100%; display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+          <h2 style="margin: 0;">${escapeHtml(cv.heading)}</h2>
+          <a href="${escapeHtml(cv.url)}" download class="card cta-contact" style="color: white; padding: 0.5rem 1rem; text-decoration: none; cursor: pointer; text-align: center;">Descargar PDF ↓</a>
+        </div>
+        <iframe src="${escapeHtml(cv.url)}" style="width: 100%; min-height: 400px; flex-grow: 1; border: none; border-radius: 8px; background: white;"></iframe>
+      </div>`;
     }
 
     function contactContent(c) {
@@ -253,7 +319,7 @@
         <h2>${escapeHtml(c.heading)}</h2>
         <p>${escapeHtml(c.intro)}</p>
         <a href="mailto:${escapeHtml(c.email)}" style="font-size: 1.5rem; font-weight:bold; display:block; margin-bottom:0.5rem; color: var(--ubuntu-orange);">${escapeHtml(c.email)}</a>
-        <p style="font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-muted);">📞 ${escapeHtml(c.phone)}</p>
+        <p style="font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-muted);">${iconImg('call', escapeHtml('📞'), 'call')} ${escapeHtml(c.phone)}</p>
         <div style="display: flex; gap: 1rem;">${links}</div>`;
     }
 
@@ -265,12 +331,28 @@
       const imgs = (project.detail && project.detail.images && project.detail.images.length)
         ? project.detail.images
         : [];
-      return imgs.length ? imgs.map(src => ({ src })) : [{ src: null }];
+      if (imgs.length) return imgs.map(src => ({ src }));
+      if (project.cover) return [{ src: project.cover }];
+      return [{ src: null }];
     }
 
+    window.__coverFail = function (img, slug) {
+      const project = APP_DATA && APP_DATA.projects
+        ? APP_DATA.projects.items.find(x => x.slug === slug)
+        : null;
+      if (project && project.glyphSvg) {
+        img.outerHTML = iconImg(project.glyphSvg, escapeHtml(project.glyph || '📁'), 'glyph');
+      } else {
+        img.outerHTML = `<span class="card-glyph">${escapeHtml(project ? project.glyph : '📁')}</span>`;
+      }
+    };
+
     function fallbackSlideHtml(project) {
+      const glyphHtml = project.glyphSvg
+        ? iconImg(project.glyphSvg, escapeHtml(project.glyph), 'glyph slide-glyph')
+        : `<span class="card-glyph" style="font-size:4rem;">${escapeHtml(project.glyph)}</span>`;
       return `<div class="detail-fallback" style="background: ${project.gradient};">
-        <span class="card-glyph" style="font-size:4rem;">${escapeHtml(project.glyph)}</span>
+        ${glyphHtml}
         <span class="detail-fallback-label">${escapeHtml(project.name)}</span>
       </div>`;
     }
@@ -328,7 +410,7 @@
       const stack = (d.stack && d.stack.length) ? d.stack : project.tags;
       const props = [
         ['Rol', d.role],
-        ['Cliente', d.client],
+        ['Organizacion', d.client],
         ['Año', d.year],
         ['Stack', stack.join(', ')]
       ].filter(([, v]) => v && v.length).map(([l, v]) => `
@@ -365,8 +447,8 @@
             ${features ? `<div class="detail-text"><h3>Funcionalidades</h3><ul class="detail-features">${features}</ul></div>` : ''}
             <div class="detail-actions">
               ${hasLinks ? `
-                ${d.links.demo ? `<a class="detail-action" href="${escapeHtml(d.links.demo)}" target="_blank" rel="noopener">🌐 Ver demo</a>` : ''}
-                ${d.links.repo ? `<a class="detail-action" href="${escapeHtml(d.links.repo)}" target="_blank" rel="noopener">⌨ Ver código</a>` : ''}` : ''}
+                ${d.links.demo ? `<a class="detail-action" href="${escapeHtml(d.links.demo)}" target="_blank" rel="noopener">${iconImg('web', escapeHtml('🌐'), 'detail')} Ver demo</a>` : ''}
+                ${d.links.repo ? `<a class="detail-action" href="${escapeHtml(d.links.repo)}" target="_blank" rel="noopener">${iconImg('keyboard', escapeHtml('⌨'), 'detail')} Ver código</a>` : ''}` : ''}
               <button class="detail-action detail-back" onclick="closeProjectDetail()">← Volver a los proyectos</button>
             </div>
           </div>
@@ -428,8 +510,10 @@
       const contentFns = {
         about: aboutContent,
         projects: projectsContent,
+        education: educationContent,
+        research: researchContent,
+        cv: cvContent,
         skills: skillsContent,
-        hobbies: hobbiesContent,
         contact: contactContent
       };
       const fn = contentFns[win.type];
@@ -444,16 +528,12 @@
         </div>`;
     }
 
-    function renderDockAndMenu(windows) {
+    function renderDock(windows) {
       const dock = document.getElementById('dock');
-      const menu = document.getElementById('activities-menu');
 
       dock.innerHTML = windows.map((w, i) => `
         <div class="dock-icon${i === 0 ? ' active' : ''}" data-window="${w.id}" role="button" tabindex="0"
-             aria-label="Abrir ${escapeHtml(w.title)}" title="${escapeHtml(w.title)}">${escapeHtml(w.icon)}</div>`).join('');
-
-      menu.innerHTML = windows.map(w => `
-        <div class="menu-item" role="menuitem" data-window="${w.id}">${escapeHtml(w.icon)} ${escapeHtml(w.title)}</div>`).join('');
+             aria-label="Abrir ${escapeHtml(w.title)}" title="${escapeHtml(w.title)}">${iconImg(w.iconSvg, escapeHtml(w.icon), 'dock-img', escapeHtml(w.title), 'png')}</div>`).join('');
 
       dock.querySelectorAll('.dock-icon').forEach(icon => {
         icon.addEventListener('click', () => openWindow(icon.dataset.window));
@@ -462,13 +542,6 @@
             openWindow(icon.dataset.window);
             e.preventDefault();
           }
-        });
-      });
-
-      menu.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-          openWindow(item.dataset.window);
-          toggleActivities(e);
         });
       });
     }
@@ -493,7 +566,7 @@
         const data = await res.json();
         APP_DATA = data;
 
-        renderDockAndMenu(data.windows);
+        renderDock(data.windows);
         document.getElementById('windows-root').innerHTML =
           data.windows.map(w => renderWindow(w, data)).join('');
         bindMaximize();
@@ -516,7 +589,7 @@
       } catch (err) {
         document.getElementById('windows-root').innerHTML = `
           <div class="empty-desktop show">
-            <span class="empty-icon">⚠️</span>
+            <span class="empty-icon">${iconImg('warning', escapeHtml('⚠️'), 'empty')}</span>
             <p>No se pudo cargar el contenido</p>
             <p class="empty-sub">${escapeHtml(err.message)}</p>
           </div>`;
