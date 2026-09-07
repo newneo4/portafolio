@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { createRoom } from './scene/room.js';
-import { createProps, interactChair, interactMug } from './scene/props.js';
+import { createRoom, interactChair } from './scene/room.js';
+import { createProps, interactMug } from './scene/props.js';
 
 // ─── RENDERER ────────────────────────────────────────────────────────────────
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -26,10 +26,6 @@ const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerH
 const composer = new EffectComposer(renderer);
 const renderPass = new RenderPass(scene, camera);
 composer.addPass(renderPass);
-
-// El bloom fue eliminado por completo para evitar halos extraños
-// const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.2, 0.3, 0.95);
-// composer.addPass(bloomPass);
 
 // Camera starts directly inside the room, in front of the desk
 const cam = { px: 0, py: 1.35, pz: -4.5, tx: -0.1, ty: 0.82, tz: -7.0 };
@@ -61,6 +57,15 @@ scene.add(deskFill);
 
 // (screen glow handled by the screen mesh emissive material, no extra light needed)
 
+// ─── DOM REFERENCES ──────────────────────────────────────────────────────────
+const loader = document.getElementById('loader');
+const hint = document.getElementById('hint');
+const crosshair = document.getElementById('crosshair');
+const overlay = document.getElementById('portfolio-overlay');
+const exitBtn = document.getElementById('exit-btn');
+const transitionScreen = document.getElementById('transition-screen');
+const quickViewBtn = document.getElementById('quick-view-btn');
+
 // ─── LOADING MANAGER ───────────────────────────────────────────────────────────
 const manager = new THREE.LoadingManager();
 manager.onLoad = () => {
@@ -71,22 +76,14 @@ manager.onLoad = () => {
 };
 
 // ─── SCENE GEOMETRY ──────────────────────────────────────────────────────────
-createRoom(scene);
+const room = createRoom(scene, manager);
 // Se guarda el objeto completo: props.screenMesh se asigna cuando el GLTF termina
 // de cargar (async), por eso no se desestructura en const.
 const props = createProps(scene, manager);
-const interactableObjects = [props.laptopGroup, props.chairGroup, props.mugGroup];
+const interactableObjects = [props.laptopGroup, room.chairGroup, props.mugGroup, room.posterGroup];
 
 // ─── STATE MACHINE ───────────────────────────────────────────────────────────
 let state = 'ROOM'; // ROOM | ZOOMING | PORTFOLIO
-
-// ─── DOM REFERENCES ──────────────────────────────────────────────────────────
-const loader = document.getElementById('loader');
-const hint = document.getElementById('hint');
-const crosshair = document.getElementById('crosshair');
-const overlay = document.getElementById('portfolio-overlay');
-const exitBtn = document.getElementById('exit-btn');
-const transitionScreen = document.getElementById('transition-screen');
 
 // ─── RAYCASTER ───────────────────────────────────────────────────────────────
 const raycaster = new THREE.Raycaster();
@@ -104,7 +101,28 @@ window.addEventListener('mousemove', (e) => {
     mouse2d.set(mouseNX, -mouseNY);
     raycaster.setFromCamera(mouse2d, camera);
     const hits = raycaster.intersectObjects(interactableObjects, true);
-    renderer.domElement.style.cursor = hits.length > 0 ? 'pointer' : 'default';
+    if (hits.length > 0) {
+      renderer.domElement.style.cursor = 'pointer';
+      
+      let isPoster = false;
+      let parent = hits[0].object;
+      while (parent) {
+        if (parent === room.posterGroup) { isPoster = true; break; }
+        parent = parent.parent;
+      }
+      if (isPoster && hint.dataset.text !== '📄 Descargar CV') {
+        setHint('📄 Descargar CV');
+      } else if (!isPoster && hint.dataset.text === '📄 Descargar CV') {
+        hint.classList.remove('visible');
+        hint.dataset.text = '';
+      }
+    } else {
+      renderer.domElement.style.cursor = 'default';
+      if (hint.dataset.text === '📄 Descargar CV') {
+        hint.classList.remove('visible');
+        hint.dataset.text = '';
+      }
+    }
   }
 });
 
@@ -124,14 +142,22 @@ renderer.domElement.addEventListener('click', (e) => {
       if (props.laptopClickable.includes(obj)) {
         zoomToLaptop();
       } else {
-        // Traverse up to find if it belongs to chair or mug
+        // Traverse up to find if it belongs to chair or mug or poster
         let parent = obj;
         while (parent) {
-          if (parent === props.chairGroup) {
-            interactChair(props.chairGroup);
+          if (parent === room.chairGroup) {
+            interactChair(room.chairGroup);
             break;
           } else if (parent === props.mugGroup) {
             interactMug(props.mugGroup);
+            break;
+          } else if (parent === room.posterGroup) {
+            const a = document.createElement('a');
+            a.href = '/CV_Noe_Machaca.pdf';
+            a.download = 'CV_Noe_Machaca.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
             break;
           }
           parent = parent.parent;
@@ -145,6 +171,7 @@ renderer.domElement.addEventListener('click', (e) => {
 function zoomToLaptop() {
   state = 'ZOOMING';
   crosshair.classList.remove('visible');
+  quickViewBtn.classList.add('hidden');
   renderer.domElement.style.cursor = 'default';
 
   // Pantalla a máximo brillo durante el acercamiento
@@ -194,6 +221,7 @@ function exitPortfolio() {
         onComplete: () => {
           state = 'ROOM';
           crosshair.classList.add('visible');
+          quickViewBtn.classList.remove('hidden');
         }
       });
     }
@@ -206,8 +234,19 @@ exitBtn.addEventListener('click', exitPortfolio);
 
 // ─── HINT HELPER ─────────────────────────────────────────────────────────────
 let hintTimer = null;
+const HINT_ICONS = {
+  '💻': '/icons/yaru/laptop.svg',
+  '📄': '/icons/yaru/document.svg'
+};
 function setHint(text, autoHideMs = 0) {
-  hint.textContent = text;
+  hint.dataset.text = text || '';
+  if (!text) {
+    hint.innerHTML = '';
+  } else {
+    hint.innerHTML = text.replace(/^([💻📄])/u, (m, e) =>
+      `<img class="hint-icon" src="${HINT_ICONS[e]}" alt="" data-fb="${e}" onerror="this.outerHTML=this.dataset.fb">`
+    );
+  }
   hint.classList.toggle('visible', !!text);
   clearTimeout(hintTimer);
   if (autoHideMs) hintTimer = setTimeout(() => hint.classList.remove('visible'), autoHideMs);

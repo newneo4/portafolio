@@ -1,9 +1,11 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import gsap from 'gsap';
 
 /**
  * Builds the interior room: floor, walls, ceiling, window, and light fixture.
  */
-export function createRoom(scene) {
+export function createRoom(scene, manager) {
   const group = new THREE.Group();
   scene.add(group);
 
@@ -81,7 +83,85 @@ export function createRoom(scene) {
   // ── Night Window (right wall) ─────────────────────────────────────────────────
   addNightWindow(group, 5.98, 2, -6);
 
-  return { group };
+  // ── CV Poster (back wall) ─────────────────────────────────────────────────────
+  // Se movió a x = -2.6 para centrarlo más junto con los otros pósters
+  const posterGroup = addPoster(group, -2.6, 1.9, -10.98, manager);
+
+  // ── Chair (GLTF) ─────────────────────────────────────────────────────────────
+  const chairGroup = new THREE.Group();
+  chairGroup.position.set(-1.0, 0, -6.0);
+  // Girar la silla 180 grados (Math.PI) sumándolo a la rotación anterior
+  chairGroup.rotation.y = -0.7 + Math.PI; 
+  group.add(chairGroup);
+
+  const gltfLoader = new GLTFLoader(manager);
+  gltfLoader.load('/models/chair.glb', (gltf) => {
+    const chairModel = gltf.scene;
+
+    // Automatically scale to ~1.1m height and place bottom at y=0
+    const box = new THREE.Box3().setFromObject(chairModel);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    
+    const targetHeight = 1.1;
+    const scale = targetHeight / size.y;
+    chairModel.scale.setScalar(scale);
+    
+    chairModel.position.x = -center.x * scale;
+    chairModel.position.y = -box.min.y * scale;
+    chairModel.position.z = -center.z * scale;
+
+    chairModel.traverse((node) => {
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+        if (node.material) {
+          node.material.roughness = Math.max(node.material.roughness || 0.4, 0.4);
+        }
+      }
+    });
+
+    chairGroup.add(chairModel);
+  });
+
+  return { group, posterGroup, chairGroup };
+}
+
+export function interactChair(chairGroup) {
+  if (chairGroup.userData.isAnimating) return;
+  chairGroup.userData.isAnimating = true;
+  gsap.to(chairGroup.rotation, {
+    y: chairGroup.rotation.y + Math.PI * 2,
+    duration: 1.5,
+    ease: 'power2.inOut',
+    onComplete: () => { chairGroup.userData.isAnimating = false; }
+  });
+}
+
+function addPoster(parent, x, y, z, manager) {
+  const posterGroup = new THREE.Group();
+  posterGroup.position.set(x, y, z);
+  parent.add(posterGroup);
+
+  // Frame (mitad del tamaño: de 1.6x2.1 a 0.8x1.05)
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.8 });
+  const frameGeo = new THREE.BoxGeometry(0.8, 1.05, 0.05);
+  const frame = new THREE.Mesh(frameGeo, frameMat);
+  posterGroup.add(frame);
+
+  // Canvas (mitad del tamaño: de 1.5x2.0 a 0.75x1.0)
+  const texLoader = new THREE.TextureLoader(manager);
+  const tex = texLoader.load('/cv_poster.png');
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const canvasMat = new THREE.MeshBasicMaterial({ map: tex });
+  const canvasGeo = new THREE.PlaneGeometry(0.75, 1.0);
+  const canvas = new THREE.Mesh(canvasGeo, canvasMat);
+  canvas.position.z = 0.026;
+  posterGroup.add(canvas);
+
+  // La luz (SpotLight) se eliminó de aquí porque vendrá de la lámpara del escritorio en props.js
+
+  return posterGroup;
 }
 
 /** Adds a small glowing window with a city-night canvas texture on the right wall */

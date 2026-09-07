@@ -23,7 +23,10 @@ export function createProps(scene, manager) {
   const props = buildLaptop(desk, manager);
 
   // ── Coffee Mug (right side of desk) ──────────────────────────────────────────
-  props.mugGroup = buildMug(desk);
+  props.mugGroup = buildMug(desk, manager);
+
+  // ── Desk Lamp (left side of desk, illuminating CV) ───────────────────────────
+  buildDeskLamp(desk);
 
   // ── Trash Can (next to desk on the floor) ────────────────────────────────────
   buildTrashCan(group, manager);
@@ -31,8 +34,7 @@ export function createProps(scene, manager) {
   // ── Bookshelf (left wall) ─────────────────────────────────────────────────────
   buildBookshelf(group);
 
-  // ── Office Chair ──────────────────────────────────────────────────────────────
-  props.chairGroup = buildChair(group);
+  // Chair moved to room.js
 
   // ── Rugs ─────────────────────────────────────────────────────────────────────
   buildRugs(group);
@@ -46,38 +48,47 @@ export function createProps(scene, manager) {
   return props;
 }
 
-export function interactChair(chairGroup) {
-  if (chairGroup.userData.isAnimating) return;
-  chairGroup.userData.isAnimating = true;
-  gsap.to(chairGroup.rotation, {
-    y: chairGroup.rotation.y + Math.PI * 2,
-    duration: 1.5,
-    ease: 'power2.inOut',
-    onComplete: () => { chairGroup.userData.isAnimating = false; }
-  });
-}
-
 export function interactMug(mugGroup) {
   if (mugGroup.userData.isAnimating) return;
   mugGroup.userData.isAnimating = true;
 
-  // Pequeño salto y tilt (como si alguien tomara un sorbo)
-  gsap.to(mugGroup.position, {
-    y: mugGroup.position.y + 0.1,
-    duration: 0.25,
-    yoyo: true,
-    repeat: 1,
-    ease: 'power1.inOut'
-  });
-  gsap.to(mugGroup.rotation, {
-    x: 0.2,
-    z: -0.15,
-    duration: 0.25,
-    yoyo: true,
-    repeat: 1,
-    ease: 'power1.inOut',
+  // La taza se desliza hacia delante, eleva y gira sobre su propio eje (y) para
+  // mostrar el asa, y luego vuelve.
+  const origin = mugGroup.position.clone();
+  const targetX = origin.x - 0.15;
+
+  const posTl = gsap.timeline({
     onComplete: () => { mugGroup.userData.isAnimating = false; }
   });
+
+  posTl
+    .to(mugGroup.position, {
+      x: targetX,
+      y: origin.y + 0.08,
+      duration: 0.35,
+      ease: 'power1.in',
+    }, 0)
+    .to(mugGroup.rotation, {
+      y: mugGroup.rotation.y + Math.PI * 2,
+      duration: 0.9,
+      ease: 'power2.inOut',
+    }, 0.15)
+    .to(mugGroup.rotation, {
+      z: -0.12,
+      duration: 0.35,
+      ease: 'power1.in',
+    }, 0)
+    .to(mugGroup.position, {
+      x: origin.x,
+      y: origin.y,
+      duration: 0.5,
+      ease: 'power1.out',
+    }, 0.5)
+    .to(mugGroup.rotation, {
+      z: 0,
+      duration: 0.5,
+      ease: 'power1.out',
+    }, 0.5);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -199,46 +210,45 @@ function buildLaptop(deskGroup, manager) {
 
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Coffee Mug
+// Coffee Mug (GLTF)
 // ─────────────────────────────────────────────────────────────────────────────
-function buildMug(deskGroup) {
+function buildMug(deskGroup, manager) {
   const mugGroup = new THREE.Group();
-  mugGroup.position.set(0.85, 0.988, -0.2); // Raised to match new desk height
-  mugGroup.scale.set(1.8, 1.8, 1.8); // Make the mug much larger
+  mugGroup.position.set(0.85, 0.988, -0.2);
   deskGroup.add(mugGroup);
 
-  // White porcelain materials — matte, completely non-glossy
-  const porcelain = new THREE.MeshStandardMaterial({ color: 0xf2eeea, roughness: 0.85, metalness: 0.0 });
-  const porcelainInner = new THREE.MeshStandardMaterial({ color: 0xe5e0da, roughness: 0.9, metalness: 0.0 });
+  const gltfLoader = new GLTFLoader(manager);
+  gltfLoader.load('/models/cup_of_coffee.glb', (gltf) => {
+    const mugModel = gltf.scene;
 
-  // Body (cylinder) — white
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.036, 0.1, 24), porcelain);
-  body.position.set(0, 0.05, 0);
-  body.castShadow = true;
-  mugGroup.add(body);
+    mugModel.scale.set(0.20, 0.20, 0.20);
+    mugModel.position.set(0, 0, 0);
+    mugModel.rotation.y = -Math.PI / 2;
 
-  // Inner rim (darker white to suggest depth)
-  const inner = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.005, 20), porcelainInner);
-  inner.position.set(0, 0.099, 0);
-  mugGroup.add(inner);
+    mugModel.traverse((node) => {
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
 
-  // Handle (torus arc) — also white
-  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.008, 8, 14, Math.PI), porcelain);
-  handle.position.set(0.045, 0.05, 0);
-  handle.rotation.y = Math.PI / 2;
-  mugGroup.add(handle);
+        if (node.material) {
+          if (node.material.isMeshStandardMaterial || node.material.isMeshPhysicalMaterial) {
+            node.material.roughness = Math.max(node.material.roughness, 0.3);
+          } else {
+            const oldMat = node.material;
+            node.material = new THREE.MeshStandardMaterial({
+              color: oldMat.color || 0xffffff,
+              roughness: 0.5,
+              metalness: 0.3,
+            });
+            if (oldMat.map) node.material.map = oldMat.map;
+          }
+        }
+      }
+    });
 
-  // Coffee inside — warm dark brown, as if just poured
-  const coffeeMat = new THREE.MeshStandardMaterial({
-    color: 0x4b2c20,
-    roughness: 0.15,   // slightly glossy surface (liquid)
-    metalness: 0.05,
+    mugGroup.add(mugModel);
   });
-  const coffee = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.003, 20), coffeeMat);
-  coffee.position.set(0, 0.097, 0);
-  mugGroup.add(coffee);
 
-  // Subtle steam — no heat light (avoid fake glow on white ceramic)
   addSteam(mugGroup);
 
   return mugGroup;
@@ -370,115 +380,6 @@ function placeBooks(shelfGroup, baseY) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Chair
-// ─────────────────────────────────────────────────────────────────────────────
-function buildChair(parent) {
-  const chair = new THREE.Group();
-  // Moved to the RIGHT side of the desk
-  chair.position.set(-1.0, 0, -6.0);
-  chair.rotation.y = -0.7; // Facing the desk from the right
-  parent.add(chair);
-
-  const fabricMat = new THREE.MeshStandardMaterial({ color: 0x141618, roughness: 0.95 });
-  const fabricMid = new THREE.MeshStandardMaterial({ color: 0x1c1e21, roughness: 0.95 });
-  const plasticMat = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.7 });
-  const metalMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, metalness: 0.85, roughness: 0.25 });
-
-  // ── Seat (wider, padded look with chamfer effect via scale) ──
-  const seat = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.1, 0.72), fabricMat);
-  seat.position.set(0, 0.5, 0);
-  seat.castShadow = true;
-  chair.add(seat);
-
-  // Seat padding lip (front edge roll)
-  const seatLip = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.76, 12), fabricMid);
-  seatLip.rotation.z = Math.PI / 2;
-  seatLip.position.set(0, 0.5, 0.38);
-  chair.add(seatLip);
-
-  // ── Backrest (ergonomic S-curve approximated with two angled boxes) ──
-  const lowerBack = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.42, 0.09), fabricMat);
-  lowerBack.position.set(0, 0.78, 0.32);
-  lowerBack.rotation.x = -0.18;
-  lowerBack.castShadow = true;
-  chair.add(lowerBack);
-
-  const upperBack = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.38, 0.09), fabricMat);
-  upperBack.position.set(0, 1.16, 0.28);
-  upperBack.rotation.x = -0.05;
-  chair.add(upperBack);
-
-  // Lumbar support bump
-  const lumbar = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.65, 14), fabricMid);
-  lumbar.rotation.z = Math.PI / 2;
-  lumbar.position.set(0, 0.78, 0.37);
-  chair.add(lumbar);
-
-  // Headrest
-  const headrest = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.22, 0.09), fabricMat);
-  headrest.position.set(0, 1.42, 0.26);
-  headrest.rotation.x = 0.05;
-  chair.add(headrest);
-
-  // Back frame (sides of backrest, dark plastic)
-  [-0.37, 0.37].forEach(bx => {
-    const bf = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.88, 0.06), plasticMat);
-    bf.position.set(bx, 1.0, 0.30);
-    bf.rotation.x = -0.1;
-    chair.add(bf);
-  });
-
-  // ── Armrests ──
-  [-0.42, 0.42].forEach(ax => {
-    // Vertical support
-    const armPost = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.25, 0.04), plasticMat);
-    armPost.position.set(ax, 0.65, 0.0);
-    chair.add(armPost);
-
-    // Horizontal pad (padded surface)
-    const armPad = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.04, 0.35), fabricMid);
-    armPad.position.set(ax, 0.78, -0.05);
-    chair.add(armPad);
-  });
-
-  // ── Central column (gas lift) ──
-  const gasLift = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.38, 12), metalMat);
-  gasLift.position.set(0, 0.28, 0);
-  chair.add(gasLift);
-
-  const piston = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.12, 12), metalMat);
-  piston.position.set(0, 0.10, 0);
-  chair.add(piston);
-
-  // ── Star base (5 arms) ──
-  const baseCenter = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.05, 20), plasticMat);
-  baseCenter.position.set(0, 0.025, 0);
-  chair.add(baseCenter);
-
-  for (let i = 0; i < 5; i++) {
-    const angle = (i / 5) * Math.PI * 2;
-    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.035, 0.38), plasticMat);
-    arm.position.set(Math.sin(angle) * 0.19, 0.025, Math.cos(angle) * 0.19);
-    arm.rotation.y = angle;
-    chair.add(arm);
-
-    // Dual wheels (axle pair)
-    [-0.03, 0.03].forEach(wo => {
-      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.022, 10), plasticMat);
-      wheel.rotation.x = Math.PI / 2;
-      wheel.position.set(
-        Math.sin(angle) * 0.37 + Math.cos(angle) * wo,
-        0.032,
-        Math.cos(angle) * 0.37 - Math.sin(angle) * wo
-      );
-      chair.add(wheel);
-    });
-  }
-
-  return chair;
-}
-
 // ─────────────────────────────────────────────────────────────────
 // Rugs
 // ─────────────────────────────────────────────────────────────────
@@ -514,7 +415,7 @@ function buildBed(parent, manager) {
 
   // Load the external GLTF model provided by the user
   const gltfLoader = new GLTFLoader(manager);
-  gltfLoader.load('/models/bed_model_002.glb', (gltf) => {
+  gltfLoader.load('/models/bed_model_003.glb', (gltf) => {
     const bedModel = gltf.scene;
     // Scale and position adjustment
     bedModel.scale.set(1.2, 1.2, 1.2);
@@ -591,9 +492,9 @@ function buildBed(parent, manager) {
 function buildPosters(parent, manager) {
   const texLoader = new THREE.TextureLoader(manager);
   const postersData = [
-    { url: '/textures/posters/soda_stereo.png', x: -1.8, y: 1.8, scale: 0.8 },
-    { url: '/textures/posters/guns_n_roses.png', x: 0, y: 1.9, scale: 1.0 },
-    { url: '/textures/posters/rhcp.png', x: 1.8, y: 1.7, scale: 0.85 }
+    { url: '/textures/posters/soda_stereo.png', x: 0.2, y: 1.8, scale: 0.8 },
+    { url: '/textures/posters/guns_n_roses.png', x: 2.0, y: 1.9, scale: 1.0 },
+    { url: '/textures/posters/rhcp.png', x: 3.8, y: 1.7, scale: 0.85 }
   ];
 
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
@@ -621,4 +522,59 @@ function buildPosters(parent, manager) {
       parent.add(posterGroup);
     });
   });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Desk Lamp
+// ─────────────────────────────────────────────────────────────────
+function buildDeskLamp(deskGroup) {
+  const lampGroup = new THREE.Group();
+  // Posicionada en el lado izquierdo del escritorio (sobre la superficie y = 0.985)
+  lampGroup.position.set(-1.2, 0.985, -0.2);
+  deskGroup.add(lampGroup);
+
+  const metalMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.8, roughness: 0.2 });
+
+  // Base
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.04, 32), metalMat);
+  // Alineada con la parte inferior del brazo (que cae en x = -0.1 debido a su inclinación)
+  base.position.set(-0.1, 0.02, 0);
+  lampGroup.add(base);
+
+  // Brazo (inclinado hacia atrás)
+  const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.5), metalMat);
+  arm.position.set(-0.05, 0.25, -0.05);
+  arm.rotation.z = -0.2;
+  arm.rotation.x = -0.2;
+  lampGroup.add(arm);
+
+  // Pantalla (Cono) apuntando hacia el póster
+  const shadeMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.5, roughness: 0.5 });
+  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.2, 32), shadeMat);
+  shade.position.set(-0.1, 0.45, -0.1);
+  // Rotarla para que apunte hacia el póster (atrás-izquierda)
+  shade.rotation.x = -Math.PI / 2 + 0.3;
+  shade.rotation.z = Math.PI / 4 + 0.1;
+  lampGroup.add(shade);
+
+  // Foco de luz
+  const spotLight = new THREE.SpotLight(0xffddaa, 28, 12, Math.PI / 5, 0.6, 1);
+  spotLight.position.set(-0.1, 0.45, -0.1); // En la pantalla
+
+  const targetObj = new THREE.Object3D();
+  // El póster está globalmente en (-2.6, 1.9, -10.98)
+  // deskGroup está en (-0.2, 0, -7.8)
+  // lampGroup en deskGroup está en (-1.2, 0.77, -0.2), global = (-1.4, 0.77, -8.0)
+  // Vector objetivo local = (-2.6 - (-1.4), 1.9 - 0.77, -10.98 - (-8.0)) = (-1.2, 1.13, -2.98)
+  targetObj.position.set(-1.2, 1.13, -2.98);
+  lampGroup.add(targetObj);
+
+  spotLight.target = targetObj;
+  spotLight.castShadow = true;
+  lampGroup.add(spotLight);
+
+  // Bombilla visual
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.03), new THREE.MeshBasicMaterial({ color: 0xffeedd }));
+  bulb.position.set(0, -0.08, 0);
+  shade.add(bulb);
 }
