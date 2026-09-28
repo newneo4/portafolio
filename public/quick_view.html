@@ -783,6 +783,21 @@
         `;
       }
 
+      let linksHtml = '';
+      if (d.links) {
+        const demoLink = d.links.demo ? `<a href="${d.links.demo}" target="_blank" class="btn btn-primary"><i data-lucide="external-link"></i> <span>Ver Demo</span></a>` : '';
+        const repoLink = d.links.repo ? `<a href="${d.links.repo}" target="_blank" class="btn btn-outline"><i data-lucide="github"></i> <span>Ver Código</span></a>` : '';
+        
+        if (demoLink || repoLink) {
+          linksHtml = `
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+              ${demoLink}
+              ${repoLink}
+            </div>
+          `;
+        }
+      }
+
       modalContent.innerHTML = `
         <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
         <div class="modal-header-img" style="${coverStyle}"></div>
@@ -796,6 +811,7 @@
 
           <p class="modal-desc">${d.description}</p>
           
+          ${linksHtml}
           ${featuresHtml}
           ${galleryHtml}
         </div>
